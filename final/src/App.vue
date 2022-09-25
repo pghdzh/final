@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <topNav class="topNav" v-show="$route.fullPath.indexOf('/talkPage')==-1" />
+    <topNav class="topNav" v-show="$route.fullPath.indexOf('/talkPage')==-1 && $route.fullPath.indexOf('/contestPage')==-1" />
     <router-view></router-view>
     <divFooter></divFooter>
   </div>

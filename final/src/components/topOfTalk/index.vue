@@ -1,16 +1,17 @@
 <template>
   <div class="main">
     <div class="nav">
-      <div @click="goHome" class="home"> 《《 返回主页</div>
+
+      <div @click="goHome" class="home">《《 返回主页</div>
       <div class="minNav">
-        <span>讨论区</span>
-        /
-        <span>前端</span>
-        /
-        <span>具体帖子标题</span>
+        <span>{{ topMsg.minNav[0] }}</span>
+
+        <span>{{ topMsg.minNav[1] }}</span>
+
+        <span>{{ topMsg.minNav[2] }}</span>
       </div>
     </div>
-    <div class="title">标题</div>
+    <div class="title">{{ topMsg.title }}</div>
   </div>
 </template>
 
@@ -19,6 +20,7 @@ export default {
   mounted() {
     console.log(this.$route);
   },
+  props: ["topMsg"],
   data() {
     return {};
   },
@@ -40,7 +42,7 @@ export default {
   .nav {
     padding: 20px;
     display: flex;
-    width: 18%;
+    width: 17%;
     justify-content: space-between;
     .home {
       cursor: pointer;

@@ -126,9 +126,9 @@ export default {
     justify-content: space-between;
     div {
       cursor: pointer;
+      
     }
     div:hover {
-      border-bottom: 1px solid #409eff;
       color: #409eff;
     }
   }

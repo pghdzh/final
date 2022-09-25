@@ -22,7 +22,7 @@ export default {
     }
   },
    computed: {
-    ...mapState("talk", ["topMsg"]),
+    ...mapState("contest", ["topMsg"]),
   },
   
 };

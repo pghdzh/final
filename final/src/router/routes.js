@@ -2,22 +2,40 @@ export default [
     {
         path: '/',
         redirect: '/home'
-    }, 
+    },
     {
-        path:'/talkPage',
-        component:() => import('@/views/talkPage'),
-        children:[
+        path: '/contestPage',
+        component: () => import("@/views/contestPage"),
+        children: [
             {
-                path:'',
-                redirect:'mainArea'
+                path: '',
+                redirect: "mainArea"
             },
             {
                 path:'mainArea',
-                component:() => import('@/views/talkPage/mainArea')
+                component:() => import("@/views/contestPage/mainArea")
             },
             {
-                path:'specificitem',
-                component:() => import('@/views/talkPage/specificItem')
+                path:'contestItem',
+                component:() => import("@/views/contestPage/contestItem")
+            }
+        ]
+    },
+    {
+        path: '/talkPage',
+        component: () => import('@/views/talkPage'),
+        children: [
+            {
+                path: '',
+                redirect: 'mainArea'
+            },
+            {
+                path: 'mainArea',
+                component: () => import('@/views/talkPage/mainArea')
+            },
+            {
+                path: 'specificitem',
+                component: () => import('@/views/talkPage/specificItem')
             }
         ]
     },

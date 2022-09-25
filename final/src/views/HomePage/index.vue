@@ -75,39 +75,27 @@
         </div>
       </div>
       <div class="contest">
-        <h1>近期比赛</h1>
+        <div class="contest-top">
+          <span class="left">比赛组队招募</span>
+          <span class="right" @click="goContest">前往招募区>></span>
+        </div>
         <div class="items">
           <div class="item" v-for="i in 4" :key="i">
-            <div class="title">比赛名字</div>
+            <div class="title">
+              <span>比赛名字</span> <span>招募人：{{ userName }}</span>
+            </div>
             <div class="detail">
               <span class="area">
-                <span
-                  style="
-                    background-color: #e74c3c;
-                    padding: 0 4px;
-                    color: #fff;
-                    font-weight: bold;
-                  "
-                  >比赛性质
-                </span>
-                <span
-                  style="
-                    background-color: #f1c40f;
-                    padding: 0 4px;
-                    color: #fff;
-                    width: 40px;
-                    font-weight: bold;
-                  "
-                  >oj类型</span
-                >
+                <span>技术标签 </span>
+                <span>vue</span>
               </span>
               <span class="area"
-                ><span>是否结束 </span>
-                <span>举办方</span>
+                ><span>需求人数 </span>
+                <span>1人</span>
               </span>
               <span class="area"
-                ><span style="color: grey">开始时间 </span>
-                <span style="color: grey">结束时间</span>
+                ><span style="color: grey">截止时间 </span>
+                <span style="color: grey">2022-9-23</span>
               </span>
             </div>
           </div>
@@ -145,11 +133,12 @@ export default {
     ...mapState("user", ["userName", "userImg"]),
   },
   methods: {
-
-    goTalkArea(){
-      this.$router.push({path:'/talkPage'})
+    goTalkArea() {
+      this.$router.push({ path: "/talkPage" });
     },
-
+    goContest() {
+      this.$router.push({ path: "/contestPage" });
+    },
     sign() {
       this.SignNums = 1;
       this.$message({
@@ -299,6 +288,22 @@ export default {
     margin-left: 10%;
     width: 60%;
     background-color: #fff;
+    .contest-top {
+      padding: 0;
+      margin: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      .left {
+        font-size: 18px;
+        font-weight: bold;
+      }
+      .right {
+        color: #3498db;
+        cursor: pointer;
+        margin-right: 3%;
+      }
+    }
     .items {
       justify-content: space-around;
       display: flex;
@@ -318,10 +323,10 @@ export default {
           color: #dd514c;
           font-weight: bold;
           background-color: rgba(221, 81, 76, 0.15);
+          display: flex;
+          justify-content: space-between;
         }
-        .title:hover {
-          color: #0056b3;
-        }
+
         .detail {
           display: flex;
           padding: 14px 10px;
@@ -375,7 +380,7 @@ export default {
         cursor: pointer;
         margin-right: 3%;
       }
-      .right:hover{
+      .right:hover {
         color: #0056b3;
       }
     }

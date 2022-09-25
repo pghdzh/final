@@ -71,10 +71,16 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapState("user", ["userImg", "userName"]),
+  },
+  mounted() {
+    this.updatetopMsg({
+      minNav: [],
+        title: "讨论列表",
+    })
   },
   data() {
     return {
@@ -85,10 +91,16 @@ export default {
         content: "",
       },
       formLabelWidth: "120px",
+      topMsg: {
+        minNav: ["讨论区/", "前端/", "讨论详情"],
+        title: "标题",
+      },
     };
   },
   methods: {
+    ...mapMutations("talk", ["updatetopMsg"]),
     goItem() {
+      this.updatetopMsg(this.topMsg);
       this.$router.push({ path: "/talkPage/specificitem" });
     },
   },
