@@ -7,7 +7,7 @@
       <el-col :span="8" class="nav">
         <div @click="routerFun(1)">实验室简介</div>
         <div @click="routerFun(2)">小组详情</div>
-        <div @click="routerFun(3)">招新与学习路线推荐</div>
+        <div @click="routerFun(3)">招新</div>
         <div @click="routerFun(4)">学长风采</div>
       </el-col>
       <el-col :span="4">
@@ -19,7 +19,7 @@
         >
         </el-input>
       </el-col>
-      <el-col :span="2" class="login" v-show="isLogin">
+      <el-col :span="2" class="login" v-show="!userName">
         <el-button
           size="mini"
           :round="true"
@@ -27,45 +27,42 @@
           plain
           @click.native="routerFun(5)"
           >登陆</el-button
+        >
+        <el-button
+          size="mini"
+          :round="true"
+          type="primary"
+          plain
+          @click.native="routerFun(6)"
+          >注册</el-button
         ></el-col
       >
       <el-col :span="2" class="user" v-show="userName">
-        <avatarArea @loginOut='loginOut' />
+        <avatarArea />
       </el-col>
     </el-row>
   </div>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import avatarArea from '@/components/avatarArea'
+import { mapState } from "vuex";
+import avatarArea from "@/components/avatarArea";
 export default {
   name: "topNav",
-  components:{
-    avatarArea
+  components: {
+    avatarArea,
   },
   data() {
     return {
       input_search: "",
-      isLogin: true,
     };
-  },
-  mounted() {
-    this.isLogin = this.userName ? false : true;
   },
   computed: {
     ...mapState("user", ["userName", "userImg"]),
   },
   methods: {
-    ...mapMutations("user", ["updateUser"]),
-    loginOut(value){
-      this.isLogin = value
-    },
     routerFun(index) {
-      this.isLogin = true;
-      if (this.userName) {
-        this.isLogin = false;
-      }
+      
       switch (index) {
         case 0:
           this.$router.push({ path: "/home" });
@@ -77,24 +74,18 @@ export default {
           this.$router.push({ path: "/group" });
           break;
         case 3:
-          this.$router.push({ path: "/suggest" });
+          this.$router.push({ path: "/getnew" });
           break;
         case 4:
           this.$router.push({ path: "/senior" });
           break;
         case 5:
-          this.isLogin = false;
+          
           this.$router.push({ path: "/login" });
           break;
+
         case 6:
-          this.isLogin = true;
-          this.updateUser({
-            userName: "",
-            userImg: "",
-          });
-          break;
-        case 7:
-          this.$router.push({ path: "/user" });
+          this.$router.push({ path: "/registerPage" });
         default:
           break;
       }
@@ -126,13 +117,12 @@ export default {
     justify-content: space-between;
     div {
       cursor: pointer;
-      
     }
     div:hover {
       color: #409eff;
     }
   }
-  .login{
+  .login {
     height: 60px;
     text-align: center;
     line-height: 60px;

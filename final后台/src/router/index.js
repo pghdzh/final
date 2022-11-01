@@ -66,16 +66,65 @@ export const constantRoutes = [
   },
 
   {
-    path: '/sentence',
+    path: '/staticData',
     component: Layout,
-    children: [{
-      path: 'sentence',
-      name: 'Sentence',
-      component: () => import('@/views/sentence'),
-      meta: { title: '句子', icon: 'el-icon-edit' }
-    }]
+    redirect: '/staticData/homeImg',
+    meta: { title: '静态数据', icon: 'el-icon-edit' },
+    children: [
+      {
+        path: 'homeImg',
+        component: () => import("@/views/staticData/homeImg"),
+        meta: { title: '首页轮播图' }
+      },
+      {
+        path: "intor",
+        component: () => import("@/views/staticData/intor"),
+        meta: { title: '简介' }
+      },
+      {
+        path: 'notice',
+        component: () => import("@/views/staticData/notice"),
+        meta: { title: "公告" }
+      },
+      {
+        path:'older',
+        component:() => import("@/views/staticData/older"),
+        meta:{title:'优秀学长信息'}
+      },
+      {
+        path: 'sentence',
+        component: () => import('@/views/staticData/sentence'),
+        meta: { title: '首页励志语句' }
+      }
+    ]
   },
-  
+  {
+    path: '/talk',
+    component: Layout,
+    redirect: '/talk/talkKinds/index',
+    meta: {
+      title: '论坛管理',
+      icon: 'el-icon-lock'
+    },
+    children: [
+      {
+        path: 'talkKinds/index',
+        component: () => import("@/views/talk/talkKinds"),
+        meta: {
+          title: '帖子分类',
+        },
+      },
+      {
+        path: 'talkList/index',
+        component: () => import("@/views/talk/talkList"),
+        meta: {
+          title: '全部帖子',
+        },
+      }
+
+    ]
+  }
+
 
 ]
 const createRouter = () => new Router({

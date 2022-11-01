@@ -155,8 +155,8 @@ router.get('/deteSentence', (req, res) => {
 //前台接口--------------------------------------------------
 //前台登陆
 router.post('/login', (req, res) => {
-    let account = req.body.account
-    let pass = req.body.pass
+    let account = req.body.userName
+    let pass = req.body.password
 
     let sql = `SELECT userName,userImg FROM user where userAccount = ${account} and userPass = ${pass};`
     db.query(sql, (err, result) => {

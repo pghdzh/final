@@ -27,19 +27,24 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import {reqLogout} from "@/api"
 export default {
   computed: {
     ...mapState("user", ["userName", "userImg"]),
   },
   methods: {
     ...mapMutations("user", ["updateUser"]),
-    routerFun(index) {
+   async routerFun(index) {
       switch (index) {
         case 6:
-          this.$emit('loginOut',true)
+          // let res = await reqLogout()
+          // console.log("logout",res)
           this.updateUser({
-            userName: "",
-            userImg: "",
+            userInfo: {
+              nickName: "",
+              avatar: "",
+            },
+            token: "",
           });
           break;
         case 7:

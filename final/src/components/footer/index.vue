@@ -13,6 +13,7 @@ export default {
 
 <style scoped lang='less'>
 .main{
+ 
     height: 40px;
     line-height: 40px;
     text-align: center;

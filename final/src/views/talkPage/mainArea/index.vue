@@ -35,7 +35,7 @@
             <span style="color: grey"> 66个回复 </span>
           </div>
           <div class="title">
-            <span class="con" @click="goItem"> 标题 </span>
+            <span class="con" @click="goItem(5)"> 标题 </span>
             <span>所属板块：<a href="">前端</a></span>
             <span> 2022-8-3 15:25:02 </span>
           </div>
@@ -47,16 +47,25 @@
             <span style="margin-top: 10px"> 2022-8-3 15:25:02 </span>
           </div>
         </div>
-        <el-pagination background layout="prev, pager, next" :total="1000">
+        <el-pagination
+          background
+          layout="sizes,prev, pager, next"
+          :total="1000"
+          :current-page.sync="pageNum"
+          :page-sizes="[10, 5, 7, 20]"
+          :page-size="pageSize"
+          @size-change="getarticleList(categoryId)"
+          @current-change="getarticleList(categoryId)"
+          v-show="categoryId !== -1"
+        >
         </el-pagination>
       </div>
       <div class="talkKind">
         <h2>板块分区</h2>
         <div class="kinds">
-          <span><el-button type="primary" plain>前端</el-button></span>
-          <span><el-button type="primary" plain>后端</el-button></span>
-          <span><el-button type="primary" plain>算法</el-button></span>
-          <span><el-button type="primary" plain>其他</el-button></span>
+          <span v-for="i in kindsList" :key="i.id" @click="getarticleList(i.id)"
+            ><el-button type="primary" plain>{{ i.name }}</el-button></span
+          >
         </div>
 
         <el-button
@@ -72,24 +81,32 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import { reqgetCategoryList, reqarticleList, reqhotArticleList } from "@/api";
 export default {
   computed: {
     ...mapState("user", ["userImg", "userName"]),
   },
   mounted() {
+    this.getInfo();
+
     this.updatetopMsg({
       minNav: [],
-        title: "讨论列表",
-    })
+      title: "讨论列表",
+    });
   },
   data() {
     return {
       dialogFormVisible: false,
+      kindsList: [],
+      pageNum: 1,
+      pageSize: 10,
+      categoryId: -1,
       form: {
         title: "",
         kind: "",
         content: "",
       },
+      hotArticleList: [],
       formLabelWidth: "120px",
       topMsg: {
         minNav: ["讨论区/", "前端/", "讨论详情"],
@@ -99,9 +116,36 @@ export default {
   },
   methods: {
     ...mapMutations("talk", ["updatetopMsg"]),
-    goItem() {
+    async getInfo() {
+     
+      let res = await reqgetCategoryList();
+      if (res.code == 200) {
+        this.kindsList = res.data;
+        console.log("kind", res.data);
+      }
+      let res2 = await reqhotArticleList();
+      if (res2.code == 200) {
+        this.hotArticleList = res2.data;
+        console.log("hotList", this.hotArticleList);
+      }
+    },
+
+    async getarticleList(id) {
+      this.categoryId = id;
+      let params = {
+        categoryId: id,
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+      };
+      console.log("params", params);
+      let res = await reqarticleList(params);
+      if (res.code == 200) {
+        console.log("artList", res.data);
+      }
+    },
+    goItem(id) {
       this.updatetopMsg(this.topMsg);
-      this.$router.push({ path: "/talkPage/specificitem" });
+      this.$router.push({ path: `/talkPage/specificitem/${id}` });
     },
   },
 };

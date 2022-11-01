@@ -11,27 +11,30 @@
             </el-carousel>
           </el-col>
           <el-col :span="8">
-            <div class="welcome" v-if="this.userName">
-              欢迎回来，{{ userName }}
-            </div>
-            <div class="date">
-              <span>{{ date.month }}月{{ date.IsBig }}</span>
-              <span class="big">{{ date.day }}</span>
-              <span>星 期 {{ date.weekday }}</span>
-            </div>
-            <div class="tips" v-if="sentence.length">
-              <span>{{ sentence[senNum].content }}</span>
-            </div>
-            <div
-              style="text-align: center; margin-top: 20px"
-              v-if="this.userName"
-            >
-              <el-button type="primary" plain @click="sign" v-show="!SignNums"
-                >点击打卡</el-button
+            <div class="rightMsg">
+              <div class="welcome" v-if="this.userName">
+                欢迎回来，{{ userName }}
+              </div>
+              <div class="date">
+                <span>{{ date.month }}月{{ date.IsBig }}</span>
+                <span class="big">{{ date.day }}</span>
+                <span>星 期 {{ date.weekday }}</span>
+              </div>
+              <div class="tips" v-if="sentence.length">
+                <span>{{ sentence[senNum].content }}</span>
+              </div>
+
+              <div
+                style="text-align: center; margin-top: 20px"
+                v-if="this.userName"
               >
-              <span v-show="SignNums"
-                >恭喜你,你已经连续签到{{ SignNums }}天</span
-              >
+                <el-button type="primary" plain @click="sign" v-show="!SignNums"
+                  >点击打卡</el-button
+                >
+                <span v-show="SignNums"
+                  >恭喜你,你已经连续签到{{ SignNums }}天</span
+                >
+              </div>
             </div>
           </el-col>
         </el-row>
@@ -113,10 +116,12 @@ export default {
   name: "HomePage",
   mounted() {
     this.getDate();
+    // this.getSentence();
     this.getMap();
-    this.getSentence();
   },
   data() {
+    const self = this;
+
     return {
       SignNums: 0,
       date: {
@@ -141,6 +146,7 @@ export default {
     },
     sign() {
       this.SignNums = 1;
+      this.getMap();
       this.$message({
         message: "恭喜你，打卡成功",
         type: "success",
@@ -211,7 +217,6 @@ export default {
           ];
           console.log(errMsg[err.code - 1]);
         }
-
         navigator.geolocation.getCurrentPosition(success, error, options);
       } else {
         console.log("无法获取您的位置，请检查定位或重试");
@@ -249,6 +254,12 @@ export default {
       .el-carousel__item:nth-child(2n + 1) {
         background-color: #d3dce6;
       }
+    }
+    .rightMsg{
+      display: flex;
+      flex-direction: column;
+      justify-content:center;
+      height:260px;
     }
     .welcome {
       text-align: center;

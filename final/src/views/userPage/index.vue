@@ -13,7 +13,7 @@
         </div>
       </div>
       <div class="right" @click="goSetPage">
-        <el-button plain><i class="el-icon-setting" >个人设置</i></el-button>
+        <el-button plain><i class="el-icon-setting">个人设置</i></el-button>
       </div>
     </div>
     <div class="mid">
@@ -23,20 +23,20 @@
       </div>
       <div class="otherInfo">
         <div class="item">
-            <span class="item-left">用户ID</span>
-            <span class="item-right">1</span>
+          <span class="item-left">用户ID</span>
+          <span class="item-right">1</span>
         </div>
         <div class="item">
-            <span class="item-left">所属小组</span>
-            <span class="item-right">综合开发小组</span>
-        </div>
-         <div class="item">
-            <span class="item-left">学习方向</span>
-            <span class="item-right">前端</span>
+          <span class="item-left">所属小组</span>
+          <span class="item-right">综合开发小组</span>
         </div>
         <div class="item">
-            <span class="item-left">联系方式</span>
-            <span class="item-right">123456798</span>
+          <span class="item-left">学习方向</span>
+          <span class="item-right">前端</span>
+        </div>
+        <div class="item">
+          <span class="item-left">联系方式</span>
+          <span class="item-right">123456798</span>
         </div>
       </div>
     </div>
@@ -44,18 +44,28 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapState, mapMutations } from "vuex";
+import { requserInfo } from "@/api";
 export default {
   name: "userPage",
+  mounted() {
+    this.getuserInfo();
+  },
   computed: {
     ...mapState("user", ["userName", "userImg"]),
   },
-  methods:{
-    goSetPage(){
-      console.log(1)
-      this.$router.push({path:'/personSet'})
-    }
-  }
+  methods: {
+    goSetPage() {
+      console.log(1);
+      this.$router.push({ path: "/personSet" });
+    },
+    async getuserInfo() {
+      let res = await requserInfo();
+      if (res.code == 200) {
+        console.log("userINfo", res.data.avatar);
+      }
+    },
+  },
 };
 </script>
 
@@ -120,18 +130,18 @@ export default {
       box-sizing: border-box;
       width: 25%;
       background-color: white;
-     
-      padding:1em 2em;
-      .item{
+
+      padding: 1em 2em;
+      .item {
         margin-top: 10px;
         display: flex;
         justify-content: space-between;
         align-content: center;
-        .item-left{
-            font-size: 15px;
+        .item-left {
+          font-size: 15px;
         }
-        .item-right{
-            color: gray;
+        .item-right {
+          color: gray;
         }
       }
     }

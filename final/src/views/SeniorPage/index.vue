@@ -1,33 +1,32 @@
 <template>
   <div class="main">
     <h1>历届大佬</h1>
-   <div class="items">
-     <transition-group
-      appear
-      name="animate__animated animate__bounce"
-      enter-active-class="animate__zoomIn"
-     
-    >
-      <div class="item" v-for="i in 3" :key="i">
-        <div class="left">头像/照片</div>
-        <div class="detail">
-          <h3>姓名</h3>
-          <div style="color: grey">毕业去向</div>
-          <div class="intor">
-            介绍Lorem ipsum dolor sit amet consectetur, adipisicing elit.
-            Tempora delectus fugiat mollitia deleniti esse officiis maiores sint
-            commodi, assumenda quidem porro iusto, at cupiditate totam
-            temporibus? Maxime commodi odit sunt?
+    <div class="items">
+      <transition-group
+        appear
+        name="animate__animated animate__bounce"
+        enter-active-class="animate__zoomIn"
+      >
+        <div class="item" v-for="i in 3" :key="i">
+          <div class="left">头像/照片</div>
+          <div class="detail">
+            <h3>姓名</h3>
+            <div style="color: grey">毕业去向</div>
+            <div class="intor">
+              介绍Lorem ipsum dolor sit amet consectetur, adipisicing elit.
+              Tempora delectus fugiat mollitia deleniti esse officiis maiores
+              sint commodi, assumenda quidem porro iusto, at cupiditate totam
+              temporibus? Maxime commodi odit sunt?
+            </div>
           </div>
         </div>
-      </div>
-    </transition-group>
-   </div>
+      </transition-group>
+    </div>
   </div>
 </template>
 
 <script>
-import 'animate.css'
+import "animate.css";
 export default {
   name: "SeniorPage",
 };
@@ -35,6 +34,7 @@ export default {
 
 <style scoped lang="less">
 .main {
+  background-color: rgb(239, 239, 239);
   margin-top: 60px;
   padding: 20px;
   h1 {

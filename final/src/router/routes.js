@@ -4,6 +4,10 @@ export default [
         redirect: '/home'
     },
     {
+        path:'/registerPage',
+        component:() => import("@/views/registerPage")
+    },
+    {
         path: '/contestPage',
         component: () => import("@/views/contestPage"),
         children: [
@@ -34,7 +38,7 @@ export default [
                 component: () => import('@/views/talkPage/mainArea')
             },
             {
-                path: 'specificitem',
+                path: 'specificitem/:id',
                 component: () => import('@/views/talkPage/specificItem')
             }
         ]
@@ -68,7 +72,7 @@ export default [
         component: () => import('@/views/SeniorPage')
     },
     {
-        path: '/suggest',
-        component: () => import("@/views/suggestPage")
+        path: '/getnew',
+        component: () => import("@/views/getNewPage")
     }
 ]

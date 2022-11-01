@@ -10,27 +10,32 @@
         ref="ruleForm"
         class="demo-ruleForm"
       >
-        <el-form-item label="账号" prop="account">
+        <el-form-item label="账号" prop="userName">
           <el-input
             type="text"
-            v-model="ruleForm.account"
+            v-model="ruleForm.userName"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="pass">
+        <el-form-item label="密码" prop="password">
           <el-input
             type="password"
-            v-model="ruleForm.pass"
+            v-model="ruleForm.password"
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        实验室账号由管理员统一发放，不提供对外注册，如需加入实验室请详阅
-        <router-link to="/suggest" style="color:#3498db">招新页面</router-link>
-        <el-form-item style="text-align: center;">
+
+        <el-form-item style="text-align: center">
           <el-button type="primary" @click="submitForm('ruleForm')"
             >登陆</el-button
           >
           <el-button @click="resetForm('ruleForm')">重置</el-button>
+        </el-form-item>
+        <el-form-item style="text-align: center">
+          没有账号？
+          <router-link to="/registerPage" style="color: #3498db"
+            >注册</router-link
+          >
         </el-form-item>
       </el-form>
     </div>
@@ -38,8 +43,8 @@
 </template>
 
 <script>
-import {reqLogin} from "@/api"
-import {mapMutations} from 'vuex'
+import { reqLogin } from "@/api";
+import { mapMutations } from "vuex";
 export default {
   name: "Login",
   data() {
@@ -59,32 +64,33 @@ export default {
     };
     return {
       ruleForm: {
-        account: "",
-        pass: "",
+        userName: "",
+        password: "",
       },
       rules: {
-        account: [{ validator: validatePass, trigger: "blur" }],
-        pass: [{ validator: validatePass2, trigger: "blur" }],
+        userName: [{ validator: validatePass, trigger: "blur" }],
+        password: [{ validator: validatePass2, trigger: "blur" }],
       },
     };
   },
   methods: {
-    ...mapMutations('user',['updateUser']),
-    async login(form){
-        let res = await reqLogin(form)
-        if(res.code == 200){
-           alert(res.msg);
-           console.log("res.data[0]",res.data[0])
-           this.updateUser(res.data[0])
-           this.$router.push({path:'/home'})
-        }
+    ...mapMutations("user", ["updateUser"]),
+    async login(form) {
+      let res = await reqLogin(form);
+      if (res.code == 200) {
+        alert(res.msg);
+        console.log("res.data", res.data);
+        this.updateUser(res.data);
+        this.$router.push({ path: "/home" });
+      } else {
+        alert(res.msg);
+      }
     },
     submitForm(formName) {
       // console.log(this.ruleForm);
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          
-          this.login(this.ruleForm)
+          this.login(this.ruleForm);
         } else {
           console.log("error submit!!");
           return false;
@@ -114,7 +120,7 @@ export default {
       text-align: center;
       margin-bottom: 20px;
     }
-    .el-button{
+    .el-button {
       margin: 20px 40px;
     }
   }
