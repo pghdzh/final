@@ -80,11 +80,11 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapMutations,mapGetters } from "vuex";
 import { reqgetCategoryList, reqarticleList, reqhotArticleList } from "@/api";
 export default {
   computed: {
-    ...mapState("user", ["userImg", "userName"]),
+    ...mapGetters("user", ["userImg", "userName"]),
   },
   mounted() {
     this.getInfo();
@@ -117,7 +117,6 @@ export default {
   methods: {
     ...mapMutations("talk", ["updatetopMsg"]),
     async getInfo() {
-     
       let res = await reqgetCategoryList();
       if (res.code == 200) {
         this.kindsList = res.data;

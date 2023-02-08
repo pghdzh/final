@@ -4,9 +4,9 @@
       <div class="topMes">
         <el-row>
           <el-col :span="16" class="swiper">
-            <el-carousel height="260px">
-              <el-carousel-item v-for="item in 4" :key="item">
-                <h3 class="small">{{ item }}</h3>
+            <el-carousel height="220px">
+              <el-carousel-item v-for="item in imgs" :key="item">
+                <img :src="item" alt="" style="width: 100%; height: 100%" />
               </el-carousel-item>
             </el-carousel>
           </el-col>
@@ -110,19 +110,27 @@
 
 <script>
 import dayjs from "dayjs";
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import { reqgetSentence } from "@/api";
 export default {
   name: "HomePage",
   mounted() {
+ 
     this.getDate();
-    // this.getSentence();
+    this.getSentence();
     this.getMap();
   },
   data() {
     const self = this;
 
     return {
+      imgs: [
+        require("./img/swiper1.jpg"),
+        require("./img/swiper2.jpg"),
+        require("./img/swiper3.jpg"),
+        require("./img/swiper4.jpg"),
+        require("./img/swiper5.jpg"),
+      ],
       SignNums: 0,
       date: {
         month: "",
@@ -135,7 +143,7 @@ export default {
     };
   },
   computed: {
-    ...mapState("user", ["userName", "userImg"]),
+    ...mapGetters("user", ["userName", "userImg"]),
   },
   methods: {
     goTalkArea() {
@@ -157,7 +165,6 @@ export default {
       let res = await reqgetSentence();
       if (res.code == 200) {
         this.sentence = res.data;
-        console.log(res.data.length);
         this.senNum = Math.round(Math.random() * (res.data.length - 1));
       }
     },
@@ -201,13 +208,13 @@ export default {
     getMap() {
       if ("geolocation" in navigator) {
         let options = {
-          enableHighAccurary: true,
+          enableHighAccurary: false,
           timeout: 5000,
         };
         function success(position) {
           let lat = position.coords.latitude;
           let lng = position.coords.longitude;
-          console.log("lat", lat, "lng", lng);
+          console.log("lat", lat, "lng", lng,"position",position);
         }
         function error(err) {
           let errMsg = [
@@ -239,27 +246,13 @@ export default {
     background-color: #fff;
     height: 260px;
     .swiper {
-      .el-carousel__item h3 {
-        color: #475669;
-        font-size: 14px;
-        opacity: 0.75;
-        line-height: 150px;
-        margin: 0;
-      }
-
-      .el-carousel__item:nth-child(2n) {
-        background-color: #99a9bf;
-      }
-
-      .el-carousel__item:nth-child(2n + 1) {
-        background-color: #d3dce6;
-      }
+      padding: 20px;
     }
-    .rightMsg{
+    .rightMsg {
       display: flex;
       flex-direction: column;
-      justify-content:center;
-      height:260px;
+      justify-content: center;
+      height: 260px;
     }
     .welcome {
       text-align: center;

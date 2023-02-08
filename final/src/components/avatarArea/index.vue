@@ -1,15 +1,15 @@
 <template>
   <div class="user">
-    <span class="img" @click="routerFun(7)">
+    <span class="img" @click="routerFun(7)" >
       <img :src="userImg" alt="" />
     </span>
     <div class="hidArea">
       <span class="userName">{{ userName }}</span>
       <div class="funArea">
-        <span>我的关注</span>
-        <span>我的收藏</span>
-        <span>个人设置</span>
-        <span>我的帖子</span>
+        <div @click="routerFun(7)">个人主页</div>
+        <el-badge :is-dot="Isdot" class="item">
+          <span @click="routerFun(8)">我的消息</span>
+        </el-badge>
       </div>
       <div class="leave">
         <el-button
@@ -26,15 +26,20 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import {reqLogout} from "@/api"
+import { mapMutations,mapGetters } from "vuex";
+import { reqLogout } from "@/api";
 export default {
   computed: {
-    ...mapState("user", ["userName", "userImg"]),
+    ...mapGetters("user", ["userName", "userImg"]),
+  },
+  data() {
+    return {
+      Isdot:true
+    }
   },
   methods: {
     ...mapMutations("user", ["updateUser"]),
-   async routerFun(index) {
+    async routerFun(index) {
       switch (index) {
         case 6:
           // let res = await reqLogout()
@@ -49,6 +54,11 @@ export default {
           break;
         case 7:
           this.$router.push({ path: "/user" });
+          break;
+        case 8:
+          this.Isdot = false
+          this.$router.push({ path: "/mymessage" });
+          break;
         default:
           break;
       }
@@ -76,7 +86,7 @@ export default {
     width: 15em;
     display: none;
     margin-top: 60px;
-    height: 120px;
+    height: 90px;
     overflow: hidden;
     text-align: center;
     color: #6c757d;
@@ -91,7 +101,7 @@ export default {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
-      span {
+      div {
         width: 40%;
         margin: 5px 0;
       }

@@ -4,8 +4,8 @@ export default [
         redirect: '/home'
     },
     {
-        path:'/registerPage',
-        component:() => import("@/views/registerPage")
+        path: '/registerPage',
+        component: () => import("@/views/registerPage")
     },
     {
         path: '/contestPage',
@@ -16,12 +16,12 @@ export default [
                 redirect: "mainArea"
             },
             {
-                path:'mainArea',
-                component:() => import("@/views/contestPage/mainArea")
+                path: 'mainArea',
+                component: () => import("@/views/contestPage/mainArea")
             },
             {
-                path:'contestItem',
-                component:() => import("@/views/contestPage/contestItem")
+                path: 'contestItem',
+                component: () => import("@/views/contestPage/contestItem")
             }
         ]
     },
@@ -74,5 +74,27 @@ export default [
     {
         path: '/getnew',
         component: () => import("@/views/getNewPage")
+    },
+    {
+        path: '/mymessage',
+        component: () => import("@/views/myMessage"),
+        children: [
+            {
+                path: '',
+                redirect: "sysMes"
+            },
+            {
+                path: 'sysMes',
+                component: () => import("@/views/myMessage/sysMes")
+            }, 
+            {
+                path:'myMes',
+                component:() => import("@/views/myMessage/myMes")
+            },
+            {
+                path:'myReply',
+                component:() => import("@/views/myMessage/myReply")
+            }
+        ]
     }
 ]

@@ -158,7 +158,7 @@ router.post('/login', (req, res) => {
     let account = req.body.userName
     let pass = req.body.password
 
-    let sql = `SELECT userName,userImg FROM user where userAccount = ${account} and userPass = ${pass};`
+    let sql = `SELECT nickName,avatar,token FROM user where userAccount = ${account} and userPass = ${pass};`
     db.query(sql, (err, result) => {
         if (err) {
             console.log(err)
@@ -168,7 +168,10 @@ router.post('/login', (req, res) => {
                 res.send({
                     code: 200,
                     msg: "登陆成功",
-                    data: result
+                    data: {
+                        userInfo:result[0],
+                        token:result[0].token
+                    }
                 })
             }
             else{

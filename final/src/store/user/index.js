@@ -1,16 +1,14 @@
 import { setToken, clearToken, getToken } from "@/utils/token"
 
 const state = {
-    userName: ((JSON.parse(localStorage.getItem('userInfo'))).nickName || ""),
-    userImg: ((JSON.parse(localStorage.getItem('userInfo'))).avatar || ""),
+    userInfo: ((JSON.parse(localStorage.getItem('userInfo'))) || ""),
     token: getToken(),
 }
 
 const mutations = {
     updateUser(state, data) {
-        state.userName = data.userInfo.nickName
+        state.userInfo = data.userInfo
         state.token = data.token
-        state.userImg = data.userInfo.avatar
         if (data.token == "") {
             clearToken()
         } else {
@@ -20,8 +18,8 @@ const mutations = {
         localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
     },
     updateUserInfo(state, userInfo) {
-        state.userName = userInfo.nickName
-        state.userImg = userInfo.avatar
+        state.userInfo = userInfo
+       
         localStorage.setItem('userInfo', JSON.stringify(userInfo))
     }
 }
@@ -31,7 +29,12 @@ const actions = {
 }
 
 const getters = {
-
+    userName(state){
+        return state.userInfo.nickName
+    },
+    userImg(state){
+        return state.userInfo.avatar
+    }
 }
 
 export default {

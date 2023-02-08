@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
+import { mapGetters } from "vuex";
 import { requserInfo } from "@/api";
 export default {
   name: "userPage",
@@ -52,7 +52,7 @@ export default {
     this.getuserInfo();
   },
   computed: {
-    ...mapState("user", ["userName", "userImg"]),
+    ...mapGetters("user", ["userName", "userImg"]),
   },
   methods: {
     goSetPage() {

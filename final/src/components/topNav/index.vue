@@ -1,7 +1,7 @@
 <template>
   <div class="main">
     <el-row class="top-nav">
-      <el-col :span="4" class="title">
+      <el-col :span="5" class="title">
         <div @click="routerFun(0)">计算机学院创新实验室</div>
       </el-col>
       <el-col :span="8" class="nav">
@@ -10,7 +10,7 @@
         <div @click="routerFun(3)">招新</div>
         <div @click="routerFun(4)">学长风采</div>
       </el-col>
-      <el-col :span="4">
+      <el-col :span="3">
         <el-input
           size="mini"
           placeholder="请输入内容"
@@ -19,7 +19,7 @@
         >
         </el-input>
       </el-col>
-      <el-col :span="2" class="login" v-show="!userName">
+      <el-col :span="4" class="login" v-show="!userName">
         <el-button
           size="mini"
           :round="true"
@@ -45,7 +45,7 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapGetters } from "vuex";
 import avatarArea from "@/components/avatarArea";
 export default {
   name: "topNav",
@@ -58,11 +58,10 @@ export default {
     };
   },
   computed: {
-    ...mapState("user", ["userName", "userImg"]),
+    ...mapGetters("user", ["userName", "userImg"]),
   },
   methods: {
     routerFun(index) {
-      
       switch (index) {
         case 0:
           this.$router.push({ path: "/home" });
@@ -80,7 +79,6 @@ export default {
           this.$router.push({ path: "/senior" });
           break;
         case 5:
-          
           this.$router.push({ path: "/login" });
           break;
 
@@ -99,33 +97,34 @@ export default {
   height: 60px;
   border-bottom: 1px solid #dcdfe6;
   background-color: #fff;
+  width: 100%;
   .top-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-wrap: nowrap;
-  }
-  .title {
-    cursor: pointer;
-    font-size: 24px;
-    height: 60px;
-    line-height: 60px;
-  }
-  .nav {
-    font-size: 15px;
-    display: flex;
-    justify-content: space-between;
-    div {
+    .title {
       cursor: pointer;
+      font-size: 24px;
+      height: 60px;
+      line-height: 60px;
     }
-    div:hover {
-      color: #409eff;
+    .nav {
+      font-size: 15px;
+      display: flex;
+      justify-content: space-between;
+      div {
+        cursor: pointer;
+      }
+      div:hover {
+        color: #409eff;
+      }
     }
-  }
-  .login {
-    height: 60px;
-    text-align: center;
-    line-height: 60px;
+    .login {
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+    }
   }
 }
 </style>

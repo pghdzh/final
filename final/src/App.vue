@@ -17,11 +17,6 @@ export default {
   name: "App",
 };
 
-//小帅哥： https://unpkg.com/live2d-widget-model-chitose@1.0.5/assets/chitose.model.json
-//萌娘：https://unpkg.com/live2d-widget-model-shizuku@1.0.5/assets/shizuku.model.json
-//<!--小可爱（女）：https://unpkg.com/live2d-widget-model-koharu@1.0.5/assets/koharu.model.json-->
-//<!--小可爱（男）：https://unpkg.com/live2d-widget-model-haruto@1.0.5/assets/haruto.model.json-->
-//<!--初音：https://unpkg.com/live2d-widget-model-miku@1.0.5/assets/miku.model.json-->
 //配置文件
 const config = {
   pluginRootPath: 'static/live2dw/',//插件在站点上的根目录(相对路径)
@@ -68,7 +63,10 @@ L2Dwidget.init(config)
 .topNav {
   position: fixed;
   top: 0;
-  width: 100%;
   z-index: 99;
+  min-width: 1200px;
+}
+div#app{
+  min-width: 1200px;
 }
 </style>

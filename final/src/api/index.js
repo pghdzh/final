@@ -1,9 +1,9 @@
 import request from "./request"
 
-// export const reqLogin = (params) => request({ url: '/login', method: 'post', data: params })
-export const reqgetSentence = () => request({ url: 'http://localhost:3000/api/getSentence', method: 'get' })
+export const reqLogin = (params) => request({ url: 'http://139.196.193.96:3000/api/login', method: 'post', data: params })
+export const reqgetSentence = () => request({ url: 'http://139.196.193.96:3000/api/getSentence', method: 'get' })
 //登陆相关接口
-export const reqLogin = (params) => request({ url: '/login', method: 'post', data: params })
+// export const reqLogin = (params) => request({ url: '/login', method: 'post', data: params })
 export const reqLogout = () => request({ url: '/logout', method: 'post' })
 //分类接口
 export const reqgetCategoryList = () => request({ url: '/category/getCategoryList', method: 'get' })
