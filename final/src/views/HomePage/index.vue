@@ -24,16 +24,9 @@
                 <span>{{ sentence[senNum].content }}</span>
               </div>
 
-              <div
-                style="text-align: center; margin-top: 20px"
-                v-if="this.userName"
-              >
-                <el-button type="primary" plain @click="sign" v-show="!SignNums"
-                  >点击打卡</el-button
-                >
-                <span v-show="SignNums"
-                  >恭喜你,你已经连续签到{{ SignNums }}天</span
-                >
+              <div style="text-align: center; margin-top: 20px" v-if="this.userName">
+                <el-button type="primary" plain @click="sign" v-show="!SignNums">点击打卡</el-button>
+                <span v-show="SignNums">恭喜你,你已经连续签到{{ SignNums }}天</span>
               </div>
             </div>
           </el-col>
@@ -52,8 +45,11 @@
         </ul>
       </div>
       <div class="talkArea">
-        <div class="talkArea">
-          <span class="left">讨论区</span>
+        <div class="talkArea-top">
+
+          <span class="left">讨论区
+            <cat class="cat" />
+          </span>
           <span class="right" @click="goTalkArea">前往讨论区>></span>
         </div>
         <div class="items">
@@ -79,7 +75,10 @@
       </div>
       <div class="contest">
         <div class="contest-top">
-          <span class="left">比赛组队招募</span>
+          <span class="left">
+            <cat  class="cat"/>
+            比赛组队招募
+          </span>
           <span class="right" @click="goContest">前往招募区>></span>
         </div>
         <div class="items">
@@ -92,12 +91,10 @@
                 <span>技术标签 </span>
                 <span>vue</span>
               </span>
-              <span class="area"
-                ><span>需求人数 </span>
+              <span class="area"><span>需求人数 </span>
                 <span>1人</span>
               </span>
-              <span class="area"
-                ><span style="color: grey">截止时间 </span>
+              <span class="area"><span style="color: grey">截止时间 </span>
                 <span style="color: grey">2022-9-23</span>
               </span>
             </div>
@@ -112,13 +109,17 @@
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
 import { reqgetSentence } from "@/api";
+import cat from "@/components/cat"
 export default {
   name: "HomePage",
   mounted() {
- 
+
     this.getDate();
     this.getSentence();
     this.getMap();
+  },
+  components: {
+    cat,
   },
   data() {
     const self = this;
@@ -214,7 +215,7 @@ export default {
         function success(position) {
           let lat = position.coords.latitude;
           let lng = position.coords.longitude;
-          console.log("lat", lat, "lng", lng,"position",position);
+          console.log("lat", lat, "lng", lng, "position", position);
         }
         function error(err) {
           let errMsg = [
@@ -240,28 +241,34 @@ export default {
   background-color: rgb(239, 239, 239);
   margin-top: 60px;
   padding: 20px 0;
+
   .topMes {
     width: 80%;
     margin-left: 10%;
     background-color: #fff;
     height: 260px;
+
     .swiper {
       padding: 20px;
     }
+
     .rightMsg {
       display: flex;
       flex-direction: column;
       justify-content: center;
       height: 260px;
     }
+
     .welcome {
       text-align: center;
       font-size: 20px;
       margin-top: 10px;
     }
+
     .date {
       margin: 20px 0;
       text-align: center;
+
       span {
         display: inline-block;
         width: 20px;
@@ -273,41 +280,56 @@ export default {
         color: rgba(5, 67, 16, 0.79);
         font-size: 17px;
       }
+
       .big {
         width: 100px;
         font-size: 80px;
         line-height: 55px;
       }
     }
+
     .tips {
       text-align: center;
+
       span {
         width: 80%;
       }
     }
   }
+
   .contest {
     padding: 20px;
     margin-top: 20px;
     margin-left: 10%;
     width: 60%;
     background-color: #fff;
+
     .contest-top {
       padding: 0;
       margin: 0;
       width: 100%;
       display: flex;
       justify-content: space-between;
+
       .left {
+        position: relative;
         font-size: 18px;
         font-weight: bold;
+
+        .cat {
+          position: absolute;
+          left: -20px;
+          top: -20px;
+        }
       }
+
       .right {
         color: #3498db;
         cursor: pointer;
         margin-right: 3%;
       }
     }
+
     .items {
       justify-content: space-around;
       display: flex;
@@ -321,6 +343,7 @@ export default {
         border: 1px solid;
         border-color: #f5cecd;
         border-radius: 4px;
+
         .title {
           cursor: pointer;
           padding: 6px 10px;
@@ -335,6 +358,7 @@ export default {
           display: flex;
           padding: 14px 10px;
           justify-content: space-between;
+
           .area {
             display: flex;
             flex-direction: column;
@@ -343,6 +367,7 @@ export default {
       }
     }
   }
+
   .notify {
     position: absolute;
     right: 10%;
@@ -350,6 +375,7 @@ export default {
     background-color: #fff;
     padding: 20px;
     width: 12%;
+
     ul {
       li {
         margin: 15px 0;
@@ -357,11 +383,13 @@ export default {
         cursor: pointer;
         color: #3498db;
       }
+
       li:hover {
         color: #0056b3;
       }
     }
   }
+
   .talkArea {
     padding: 20px;
     width: 60%;
@@ -369,30 +397,45 @@ export default {
     background-color: #fff;
     margin-left: 10%;
 
-    .talkArea {
+    .talkArea-top {
       padding: 0;
       margin: 0;
       width: 100%;
       display: flex;
       justify-content: space-between;
+      position: relative;
+
+
+
       .left {
+        position: relative;
         font-size: 18px;
         font-weight: bold;
+
+        .cat {
+          position: absolute;
+          top: -20px;
+          left: -25px;
+        }
       }
+
       .right {
         color: #3498db;
         cursor: pointer;
         margin-right: 3%;
       }
+
       .right:hover {
         color: #0056b3;
       }
     }
+
     .items {
       margin-top: 20px;
       display: flex;
       flex-wrap: wrap;
       justify-content: space-around;
+
       .item {
         margin: 5px;
         border-radius: 4px;
@@ -402,19 +445,23 @@ export default {
         justify-content: space-around;
         align-items: center;
         padding: 10px;
+
         .left {
           img {
             width: 40px;
             border-radius: 50%;
           }
         }
+
         .right {
           div {
             margin: 4px 0;
           }
         }
+
         .OfArea {
           width: 40%;
+
           .icons {
             margin-top: 20px;
             display: flex;

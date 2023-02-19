@@ -87,9 +87,9 @@ export const constantRoutes = [
         meta: { title: "公告" }
       },
       {
-        path:'older',
-        component:() => import("@/views/staticData/older"),
-        meta:{title:'优秀学长信息'}
+        path: 'older',
+        component: () => import("@/views/staticData/older"),
+        meta: { title: '优秀学长信息' }
       },
       {
         path: 'sentence',
@@ -123,7 +123,27 @@ export const constantRoutes = [
       }
 
     ]
-  }
+  },
+  {
+    path: '/contest',
+    component: Layout,
+    children: [{
+      path: 'contest',
+      name: 'Contest',
+      component: () => import('@/views/contest'),
+      meta: { title: '比赛招募', icon: 'el-icon-s-order' }
+    }]
+  },
+   {
+    path: '/getnew',
+    component: Layout,
+    children: [{
+      path: 'getnew',
+      name: 'Getnew',
+      component: () => import('@/views/getNew'),
+      meta: { title: '招新', icon: 'el-icon-bell' }
+    }]
+  },
 
 
 ]

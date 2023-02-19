@@ -37,6 +37,7 @@ export default {
   background-color: rgb(239, 239, 239);
   margin-top: 60px;
   padding: 20px;
+  height: 800px;
   h1 {
     margin-left: 18%;
   }

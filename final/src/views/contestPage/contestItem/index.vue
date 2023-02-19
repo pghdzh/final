@@ -43,11 +43,13 @@ export default {
 
 <style scoped lang='less'>
 .main {
+  
   .topArea {
     padding: 20px 10%;
     background: #444c60 url(./img/detail-bg.jpg) center center no-repeat;
     color: white;
     position: relative;
+   
     .status {
       font-size: 16px;
     }
@@ -68,7 +70,7 @@ export default {
   }
   .midArea {
     background-color: rgb(239, 239, 239);
-    height: 400px;
+    height:600px;
     padding: 20px 0;
     .detail {
       background: white;

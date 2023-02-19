@@ -49,11 +49,11 @@ export default {
 .container {
   margin-top: 60px;
   background-color: rgb(239, 239, 239);
-  min-height: 700px;
+  min-height: 850px;
   .mid {
     width: 70%;
     margin-left: 15%;
-    height: 700px;
+    height: 850px;
     display: flex;
     justify-content: space-between;
     .left-nav {

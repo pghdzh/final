@@ -151,7 +151,7 @@ export default {
 <style scoped lang="less">
 .main {
   margin-top: 60px;
-  height: 600px;
+  height: 800px;
   padding: 20px;
   background-color: rgb(239, 239, 239);
   .btn {
