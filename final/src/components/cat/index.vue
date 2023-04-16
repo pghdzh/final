@@ -3,7 +3,7 @@
 
         <div class="kitty-main">
             <span class="stand"></span>
-            <el-tooltip class="item" effect="light" content="我在睡觉呢，无聊的话去找蕾姆玩。  ╮(╯▽╰)╭" placement="right-end">
+            <el-tooltip class="item" effect="light" content="偷偷告诉你，下面的模型在个人主页可以更换哦。" placement="right-end">
                 <div class="cat">
                     <div class="body"></div>
                     <div class="head">
@@ -53,7 +53,7 @@ export default {
 
     },
     methods: {
-
+        
     },
     computed: {
 

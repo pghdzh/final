@@ -5,7 +5,7 @@ import store from '@/store'
 // create an axios instance
 
 const service = axios.create({
-  baseURL: 'http://47.108.185.227:8080', // url = base url + request url
+  baseURL: 'http://1.14.123.114:7070', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })
@@ -14,9 +14,9 @@ const service = axios.create({
 service.interceptors.request.use(
   config => {
     // do something before request is sent
-   
+ 
     if (store.state.user.token) {
-      config.headers.token = store.state.user.token
+      config.headers.Authorization ='Bearer ' + store.state.user.token
     }
     return config
   },

@@ -6,7 +6,7 @@
       </el-col>
       <el-col :span="8" class="nav">
         <div @click="routerFun(1)">实验室简介</div>
-        <div @click="routerFun(2)">小组详情</div>
+        <div @click="routerFun(2)">资源区</div>
         <div @click="routerFun(3)">招新</div>
         <div @click="routerFun(4)">学长风采</div>
       </el-col>
@@ -70,7 +70,7 @@ export default {
           this.$router.push({ path: "/intor" });
           break;
         case 2:
-          this.$router.push({ path: "/group" });
+          this.$router.push({ path: "/file" });
           break;
         case 3:
           this.$router.push({ path: "/getnew" });

@@ -1,11 +1,14 @@
 <template>
   <div class="main">
     <div class="topArea">
+      <div class="returnList" @click="goList">
+        《《 返回招募区
+      </div>
       <div class="status">招募中</div>
       <div class="title">互联网+招人</div>
       <div class="tip">(请同学自行通过右侧联系方式联系招募人)</div>
       <div class="person">
-        <span>招聘人:pgh</span>
+        <span>招募人:pgh</span>
         <br />
         <br />
         <span>联系方式(qq):1234564</span>
@@ -37,6 +40,9 @@ export default {
 
   methods: {
     ...mapMutations("contest", ["updatetopMsg"]),
+    goList(){
+      this.$router.push({path:"/contestPage"})
+    }
   },
 };
 </script>
@@ -49,7 +55,12 @@ export default {
     background: #444c60 url(./img/detail-bg.jpg) center center no-repeat;
     color: white;
     position: relative;
-   
+   .returnList{
+    position: absolute;
+    top: 20px;
+    left: 6px;
+    cursor: pointer;
+   }
     .status {
       font-size: 16px;
     }

@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container" ref="vantaRef">
       <div class="topMes">
         <el-row>
           <el-col :span="16" class="swiper">
-            <el-carousel height="220px">
+            <el-carousel height="320px">
               <el-carousel-item v-for="item in imgs" :key="item">
                 <img :src="item" alt="" style="width: 100%; height: 100%" />
               </el-carousel-item>
@@ -20,14 +20,15 @@
                 <span class="big">{{ date.day }}</span>
                 <span>星 期 {{ date.weekday }}</span>
               </div>
-              <div class="tips" v-if="sentence.length">
+              <div style="text-align: center; margin-top: 20px" v-if="this.userName">
+                <el-button type="primary" plain @click="sign" v-show="!IsSign">点击打卡</el-button>
+                <span v-show="IsSign">恭喜你,你已经连续签到{{ SignNums }}天</span>
+              </div>
+              <div class="tips" v-if="sentence.length" style="text-align: center; margin-top: 20px">
                 <span>{{ sentence[senNum].content }}</span>
               </div>
 
-              <div style="text-align: center; margin-top: 20px" v-if="this.userName">
-                <el-button type="primary" plain @click="sign" v-show="!SignNums">点击打卡</el-button>
-                <span v-show="SignNums">恭喜你,你已经连续签到{{ SignNums }}天</span>
-              </div>
+
             </div>
           </el-col>
         </el-row>
@@ -44,7 +45,31 @@
           <li>公告</li>
         </ul>
       </div>
-      <div class="talkArea">
+      <div class="daily">
+        <h1>值日生</h1>
+        <div class="name">
+          <i class="el-icon-user-solid"></i>
+          彭国浩
+        </div>
+        <div class="tel">
+          <i class="el-icon-phone"></i>
+          联系方式
+        </div>
+        <div class="btn">
+          <el-button type="primary" plain @click="dailyDialogVisible = true">提交每日情况</el-button>
+        </div>
+      </div>
+      <el-dialog title="日志" :visible.sync="dailyDialogVisible" width="30%" >
+        <span>
+          每日情况记录：
+          <el-input type="textarea" :rows="2" placeholder="请输入内容"></el-input>
+        </span>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dailyDialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="dailyDialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+      <div class="talkArea" v-loading="anyLoading">
         <div class="talkArea-top">
 
           <span class="left">讨论区
@@ -53,19 +78,24 @@
           <span class="right" @click="goTalkArea">前往讨论区>></span>
         </div>
         <div class="items">
-          <div class="item" v-for="i in 6" :key="i">
+          <div class="item" v-for="i, index in hotTalkList" :key="index">
             <div class="left">
-              <img src="@/assets/logo.png" alt="" />
+              <div class="itemImg" v-if="i.user.avatar" :style="{ 'background-image': `url(${i.user.avatar})` }">
+
+              </div>
+
+              <div v-else class="defaultAvatar">{{ i.user.nickName[0] }}</div>
             </div>
             <div class="right">
-              <div style="color: #10a0ea; cursor: pointer">讨论标题</div>
-              <div style="font-weight: bold">发布者</div>
-              <div style="color: grey; font-size: 6px">发布时间</div>
+              <div style="color: #10a0ea; cursor: pointer"
+                @click="$router.push({ path: `/talkspecificitem/${i.articleId}` })">{{ i.title }}</div>
+              <div style="font-weight: bold">{{ i.user.nickName }}</div>
+              <div style="color: grey; font-size: 6px">{{ i.createTime }}</div>
             </div>
             <div class="OfArea">
-              <div>所属板块:前端</div>
+              <div>所属板块:{{ i.categoryName }}</div>
               <div class="icons">
-                <i class="el-icon-view">77</i>
+                <i class="el-icon-view">{{ i.viewCount }}</i>
                 <i class="el-icon-chat-dot-square">66</i>
                 <i class="el-icon-star-off">36</i>
               </div>
@@ -76,7 +106,7 @@
       <div class="contest">
         <div class="contest-top">
           <span class="left">
-            <cat  class="cat"/>
+            <cat class="cat" />
             比赛组队招募
           </span>
           <span class="right" @click="goContest">前往招募区>></span>
@@ -101,6 +131,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -108,23 +139,33 @@
 <script>
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
-import { reqgetSentence } from "@/api";
-import cat from "@/components/cat"
+import { reqgetSentence, reqsign, reqsignInfo, reqhotArticleList } from "@/api";
+import cat from "@/components/cat";
+import * as THREE from 'three'
+import BIRDS from 'vanta/src/vanta.birds'
 export default {
   name: "HomePage",
   mounted() {
-
+    this.vantaEffect = BIRDS({
+      el: this.$refs.vantaRef,
+      THREE: THREE,
+      backgroundColor: 0xEFEFEF,
+      separation: 100.00,
+      quantity: 4.00
+    })
     this.getDate();
     this.getSentence();
-    this.getMap();
+    // this.getMap();
+    this.getreqInfoLogin()
+    this.getreqInfoAny()
   },
   components: {
     cat,
   },
   data() {
-    const self = this;
-
     return {
+      dailyDialogVisible: false,
+      anyLoading: true,
       imgs: [
         require("./img/swiper1.jpg"),
         require("./img/swiper2.jpg"),
@@ -132,6 +173,8 @@ export default {
         require("./img/swiper4.jpg"),
         require("./img/swiper5.jpg"),
       ],
+      hotTalkList: [],
+      IsSign: false,
       SignNums: 0,
       date: {
         month: "",
@@ -144,7 +187,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters("user", ["userName", "userImg"]),
+    ...mapGetters("user", ["userName", "userImg", 'userId']),
   },
   methods: {
     goTalkArea() {
@@ -153,13 +196,55 @@ export default {
     goContest() {
       this.$router.push({ path: "/contestPage" });
     },
-    sign() {
-      this.SignNums = 1;
-      this.getMap();
-      this.$message({
-        message: "恭喜你，打卡成功",
-        type: "success",
-      });
+
+    async getreqInfoAny() {
+      this.anyLoading = true
+      try {
+        let res = await Promise.all([
+          reqhotArticleList()
+        ])
+        if (res) {
+          // console.log("res",res)
+          this.hotTalkList = res[0].data.slice(0, 6)
+          this.anyLoading = false
+          // console.log("hot", this.hotTalkList)
+        }
+      } catch (err) {
+        this.$message({
+          showClose: true,
+          message: '获取公有数据异常，请刷新重试',
+          type: 'error'
+        });
+      }
+    },
+
+    async getreqInfoLogin() {
+      if (!this.userName)
+        return
+      try {
+        let res = await Promise.all([
+          reqsignInfo()
+        ])
+        if (res) {
+          // console.log("res", res)
+          this.SignNums = res[0].signCount
+          this.IsSign = res[0].signFlag
+        }
+      } catch (err) {
+        console.log("err", err)
+      }
+    },
+    async sign() {
+      // this.$router.push({path:'/amap'})
+      // this.SignNums = 1;
+      // this.getMap();
+      let res = await reqsign()
+      if (res.code == 200)
+        this.$message({
+          message: "恭喜你，打卡成功",
+          type: "success",
+        });
+      this.getreqInfoLogin()
     },
 
     async getSentence() {
@@ -203,7 +288,14 @@ export default {
       this.date.month = month[dayjs().month()];
       this.date.IsBig = IsBig[dayjs().month()];
       this.date.day = dayjs().date();
-      this.date.weekday = weeks[dayjs().day() - 1];
+      if (dayjs().day() == 0) {
+        this.date.weekday = '天';
+      }
+      else {
+        this.date.weekday = weeks[dayjs().day() - 1];
+      }
+
+
     },
 
     getMap() {
@@ -243,10 +335,11 @@ export default {
   padding: 20px 0;
 
   .topMes {
+    z-index: 1;
     width: 80%;
     margin-left: 10%;
     background-color: #fff;
-    height: 260px;
+    height: 360px;
 
     .swiper {
       padding: 20px;
@@ -256,13 +349,14 @@ export default {
       display: flex;
       flex-direction: column;
       justify-content: center;
-      height: 260px;
+      height: 360px;
     }
 
     .welcome {
       text-align: center;
       font-size: 20px;
       margin-top: 10px;
+      margin-bottom: 30px;
     }
 
     .date {
@@ -298,6 +392,7 @@ export default {
   }
 
   .contest {
+    z-index: 1;
     padding: 20px;
     margin-top: 20px;
     margin-left: 10%;
@@ -369,12 +464,14 @@ export default {
   }
 
   .notify {
+    z-index: 1;
     position: absolute;
     right: 10%;
-    top: 300px;
+    top: 400px;
     background-color: #fff;
     padding: 20px;
     width: 12%;
+    max-height: 300px;
 
     ul {
       li {
@@ -390,12 +487,29 @@ export default {
     }
   }
 
+  .daily {
+    z-index: 1;
+    position: absolute;
+    right: 10%;
+    top: 750px;
+    background-color: #fff;
+    padding: 20px;
+    width: 12%;
+
+    div {
+      margin-top: 20px;
+      font-size: large;
+    }
+  }
+
   .talkArea {
+    z-index: 1;
     padding: 20px;
     width: 60%;
     margin-top: 20px;
     background-color: #fff;
     margin-left: 10%;
+    min-height: 300px;
 
     .talkArea-top {
       padding: 0;
@@ -447,9 +561,26 @@ export default {
         padding: 10px;
 
         .left {
-          img {
-            width: 40px;
+          .itemImg {
+            width: 60px;
+            height: 60px;
             border-radius: 50%;
+            overflow: hidden;
+
+            border: 1px solid #e6eaf0;
+            background-size: cover;
+          }
+
+
+          .defaultAvatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #a5a4a4;
+            color: #fff;
+            font-size: 40px;
+            text-align: center;
+            line-height: 50px;
           }
         }
 
@@ -471,5 +602,7 @@ export default {
       }
     }
   }
+
+
 }
 </style>

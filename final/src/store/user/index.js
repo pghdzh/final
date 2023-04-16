@@ -1,27 +1,25 @@
 import { setToken, clearToken, getToken } from "@/utils/token"
 
 const state = {
-    userInfo: ((JSON.parse(localStorage.getItem('userInfo'))) || ""),
+    userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || { nickName: "", avatar: "" },
     token: getToken(),
 }
 
 const mutations = {
     updateUser(state, data) {
-        state.userInfo = data.userInfo
-        state.token = data.token
-        if (data.token == "") {
+        state.userInfo = data
+        console.log("userinfo", data)
+        sessionStorage.setItem('userInfo', JSON.stringify(data))
+    },
+    updateToken(state, data) {
+        state.token = data
+        if (data == "") {
             clearToken()
         } else {
-            setToken(data.token)
+            setToken(data)
         }
-
-        localStorage.setItem('userInfo', JSON.stringify(data.userInfo))
     },
-    updateUserInfo(state, userInfo) {
-        state.userInfo = userInfo
-       
-        localStorage.setItem('userInfo', JSON.stringify(userInfo))
-    }
+
 }
 
 const actions = {
@@ -29,11 +27,14 @@ const actions = {
 }
 
 const getters = {
-    userName(state){
+    userName(state) {
         return state.userInfo.nickName
     },
-    userImg(state){
+    userImg(state) {
         return state.userInfo.avatar
+    },
+    userId(state) {
+        return state.userInfo.userId
     }
 }
 

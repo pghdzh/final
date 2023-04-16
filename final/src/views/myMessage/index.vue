@@ -7,9 +7,9 @@
           消息中心
         </div>
         <div class="nav-list">
-          <div class="list-item" @click="mesRoute(1)">系统通知</div>
-          <div class="list-item" @click="mesRoute(2)">回复我的</div>
-          <div class="list-item" @click="mesRoute(3)">我的消息</div>
+          <div class="list-item" :class="{itemSelected : navIndex == 1}" @click="mesRoute(1)">系统通知</div>
+          <div class="list-item" :class="{itemSelected : navIndex == 2}" @click="mesRoute(2)">回复我的</div>
+          <div class="list-item" :class="{itemSelected : navIndex == 3}" @click="mesRoute(3)">我的消息</div>
         </div>
       </div>
       <div class="right-detail">
@@ -22,18 +22,23 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      navIndex:1,
+    };
   },
   methods: {
     mesRoute(index) {
       switch (index) {
         case 1:
+          this.navIndex = 1
           this.$router.push({ path: "/mymessage/sysMes" });
           break;
         case 2:
+        this.navIndex = 2
           this.$router.push({ path: "/mymessage/myReply" });
           break;
         case 3:
+        this.navIndex = 3
           this.$router.push({ path: "/mymessage/myMes" });
           break;
 
@@ -73,6 +78,9 @@ export default {
           cursor: pointer;
           font-weight: bold;
           color: grey;
+        }
+        .itemSelected{
+          color: #2faee3;
         }
         .list-item:hover {
           color: #2faee3;

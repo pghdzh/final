@@ -1,15 +1,7 @@
 <template>
   <div class="main">
     <div class="nav">
-
       <div @click="goHome" class="home">《《 返回主页</div>
-      <div class="minNav">
-        <span>{{ topMsg.minNav[0] }}</span>
-
-        <span>{{ topMsg.minNav[1] }}</span>
-
-        <span>{{ topMsg.minNav[2] }}</span>
-      </div>
     </div>
     <div class="title">{{ topMsg.title }}</div>
   </div>

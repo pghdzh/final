@@ -63,7 +63,7 @@ export default {
         label: '小组公告'
       }],
       dialogVisible: false,
-      form: { title: "", grade: '', person: '', content: '' },
+      form: { title: "", grade: '', person: '管理员', content: '' },
       NoticeData: [{ title: "公告标题", grade: '全实验室', person: '管理员', content: '公告内容' },
       { title: "公告标题", grade: '全实验室', person: '管理员', content: '公告内容' },
       { title: "公告标题", grade: '全实验室', person: '管理员', content: '公告内容' },

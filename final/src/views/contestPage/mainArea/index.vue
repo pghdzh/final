@@ -1,5 +1,11 @@
 <template>
   <div class="main">
+    <div class="TopNav">
+      <div class="nav">
+        <div @click="goHome" class="home">《《 返回主页</div>
+      </div>
+      <div class="title">招募区</div>
+    </div>
     <el-dialog title="发布招募" :visible.sync="dialogFormVisible">
       <el-form :model="form" label-width="80px">
         <el-form-item label="比赛名称" style="width: 50%">
@@ -76,17 +82,17 @@
     <div class="midForm">
       <el-table ref="filterTable" :data="tableData" style="width: 100%">
         <el-table-column type="index" width="50"> </el-table-column>
-        <el-table-column prop="date" label="截止日期" width="180" sortable>
+        <el-table-column prop="date" label="截止日期"  sortable>
         </el-table-column>
-        <el-table-column prop="name" label="招募人" width="180">
+        <el-table-column prop="name" label="招募人" >
         </el-table-column>
-        <el-table-column prop="contest" label="比赛" width="100">
+        <el-table-column prop="contest" label="比赛">
         </el-table-column>
-        <el-table-column prop="nums" label="招募人数" width="100">
+        <el-table-column prop="nums" label="招募人数" >
         </el-table-column>
-        <el-table-column prop="intor" label="简要描述" width="300">
+        <el-table-column prop="intor" label="简要描述">
         </el-table-column>
-        <el-table-column prop="tag" label="标签" width="100">
+        <el-table-column prop="tag" label="标签" >
           <template slot-scope="scope">
             <el-tag
               :type="tagType[Math.floor(Math.random() * 5)]"
@@ -95,7 +101,7 @@
             >
           </template>
         </el-table-column>
-        <el-table-column fixed="right" label="操作" width="120">
+        <el-table-column fixed="right" label="操作" >
           <template slot-scope="scope">
             <el-button
               @click.native.prevent="godetail(scope.$index, tableData)"
@@ -244,6 +250,9 @@ export default {
   },
   methods: {
     ...mapMutations("contest", ["updatetopMsg"]),
+      goHome() {
+      this.$router.push({ path: "/home" });
+    },
     submitForm(){
       console.log(this.form)
     },
@@ -260,7 +269,35 @@ export default {
 .main {
   width: 100%;
   background-color: rgb(239, 239, 239);
-  padding: 40px 0;
+  
+  .TopNav {
+    height: 128px;
+    background-color: rgb(35, 37, 38);
+    width: 100%;
+    position: relative;
+    color: white;
+    margin-bottom: 40px;
+
+    .nav {
+      padding: 20px;
+      display: flex;
+      width: 17%;
+      justify-content: space-between;
+
+      .home {
+        cursor: pointer;
+      }
+    }
+
+    .title {
+      position: absolute;
+      font-weight: bold;
+      top: 40%;
+      left: 10%;
+      font-size: 28px;
+    }
+  }
+
   .top {
     display: flex;
     justify-content: space-between;

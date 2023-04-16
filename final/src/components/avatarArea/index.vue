@@ -1,7 +1,7 @@
 <template>
   <div class="user">
-    <span class="img" @click="routerFun(7)" >
-      <img :src="userImg" alt="" />
+    <span class="img" @click="routerFun(7)">
+      <div class="avatar" :style="{ 'background-image': `url(${userImg})` }"></div>
     </span>
     <div class="hidArea">
       <span class="userName">{{ userName }}</span>
@@ -12,21 +12,14 @@
         </el-badge>
       </div>
       <div class="leave">
-        <el-button
-          size="mini"
-          :round="true"
-          type="primary"
-          plain
-          @click.native="routerFun(6)"
-          >登出</el-button
-        >
+        <el-button size="mini" :round="true" type="primary" plain @click.native="routerFun(6)">登出</el-button>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapMutations,mapGetters } from "vuex";
+import { mapMutations, mapGetters } from "vuex";
 import { reqLogout } from "@/api";
 export default {
   computed: {
@@ -34,23 +27,25 @@ export default {
   },
   data() {
     return {
-      Isdot:true
+      Isdot: true
     }
   },
   methods: {
-    ...mapMutations("user", ["updateUser"]),
+    ...mapMutations("user", ["updateUser", 'updateToken']),
     async routerFun(index) {
       switch (index) {
         case 6:
-          // let res = await reqLogout()
-          // console.log("logout",res)
-          this.updateUser({
-            userInfo: {
+          let res = await reqLogout()
+          console.log("logout", res)
+          this.updateUser(
+            {
               nickName: "",
               avatar: "",
+              userId: null,
             },
-            token: "",
-          });
+          );
+          this.updateToken("")
+          this.$router.push({ path: "/" });
           break;
         case 7:
           this.$router.push({ path: "/user" });
@@ -73,11 +68,16 @@ export default {
   position: relative;
   display: flex;
   justify-content: space-around;
+
   .img {
-    img {
+    .avatar {
+      width: 60px;
       height: 60px;
       border-radius: 50%;
-      width: 60px;
+      overflow: hidden;
+      border: 1px solid #e6eaf0;
+      background-size: cover;
+
     }
   }
 
@@ -94,20 +94,28 @@ export default {
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 0 15px 1px gainsboro;
+
     .userName {
       font-size: 20px;
     }
+
     .funArea {
       display: flex;
       justify-content: space-around;
       flex-wrap: wrap;
+
       div {
         width: 40%;
         margin: 5px 0;
       }
+
+      div:hover {
+        color: #2faee3;
+      }
     }
   }
 }
+
 .user:hover .hidArea {
   display: block;
 }

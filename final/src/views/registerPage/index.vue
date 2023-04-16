@@ -31,10 +31,10 @@
             autocomplete="off"
           ></el-input>
         </el-form-item>
-        <el-form-item label="邮箱" prop="emain">
+        <el-form-item label="邮箱" prop="email">
           <el-input
             type="text"
-            v-model="ruleForm.emain"
+            v-model="ruleForm.email"
             autocomplete="off"
           ></el-input>
         </el-form-item>
@@ -84,7 +84,7 @@ export default {
     };
     return {
       ruleForm: {
-        emain: "",
+        email: "",
         nickName: "",
         userName: "",
         password: "",
@@ -93,7 +93,7 @@ export default {
         userName: [{ validator: validatePass, trigger: "blur" }],
         password: [{ validator: validatePass2, trigger: "blur" }],
         nickName: [{ validator: validatePass3, trigger: "blur" }],
-        emain: [{ validator: validatePass4, trigger: "blur" }],
+        email: [{ validator: validatePass4, trigger: "blur" }],
       },
     };
   },

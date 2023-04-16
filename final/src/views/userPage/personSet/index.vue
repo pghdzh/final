@@ -1,23 +1,22 @@
 <template>
   <div class="main">
-    <h3>头像：</h3>
-    <div class="addAvatar">
-      <el-upload
-        name="uploadFile"
-        class="avatar-uploader"
-        action="http://47.108.185.227:8080/file/uplodaAvatar"
-        :show-file-list="false"
-        :on-success="handleAvatarSuccess"
-        :before-upload="beforeAvatarUpload"
-      >
-        <img v-if="form.avatar" :src="form.avatar" class="avatar" />
-        <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-      </el-upload>
-    </div>
+
 
     <div class="addForm">
       <el-form ref="form" :model="form" label-width="80px">
-        
+        <el-form-item label="昵称" style="width: 600px">
+          <el-input v-model="form.nickName"></el-input>
+        </el-form-item>
+        <el-form-item label="签名" style="width: 600px">
+          <el-input v-model="form.signature"></el-input>
+        </el-form-item>
+
+
+        <el-form-item label="个人介绍" style="width: 600px">
+          <el-input type="textarea" :rows="4" placeholder="请输入内容" v-model="form.introduction">
+          </el-input>
+
+        </el-form-item>
         <el-form-item label="性别">
           <el-select v-model="form.sex" placeholder="请选择性别">
             <el-option label="男" value="0"></el-option>
@@ -25,16 +24,26 @@
             <el-option label="未知" value="2"></el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="昵称" style="width: 600px">
-          <el-input v-model="form.nickName"></el-input>
+        <el-form-item label="所属小组">
+          <el-select v-model="form.deptId" placeholder="请选择小组">
+            <el-option label="小组1" :value=0></el-option>
+            <el-option label="小组2" :value=1></el-option>
+            <el-option label="小组3" :value=2></el-option>
+            <el-option label="小组4" :value=3></el-option>
+          </el-select>
         </el-form-item>
-        <el-form-item label="邮箱">
+        <el-form-item label="学习方向" style="width: 600px">
+          <el-input v-model="form.learnDir"></el-input>
+        </el-form-item>
+        <el-form-item label="联系方式" style="width: 600px">
+          <el-input v-model="form.phoneNumber"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱" style="width: 600px">
           <el-input v-model="form.email"></el-input>
         </el-form-item>
+
         <el-form-item style="text-align: center">
-          <el-button type="primary" @click="onSubmit" style="margin-right: 10%"
-            >提交</el-button
-          >
+          <el-button type="primary" @click="onSubmit" style="margin-right: 10%">提交</el-button>
           <el-button @click.native="$router.back()">取消</el-button>
         </el-form-item>
       </el-form>
@@ -43,49 +52,63 @@
 </template>
 
 <script>
-import { reqUpdatauerInfo } from "@/api";
-import { mapMutations } from "vuex";
+import { requpdateuserinfo, reqgetInfo } from "@/api";
+
 export default {
   name: "personSet",
+  mounted() {
+    this.getuserInfo()
+  },
   data() {
     return {
+      userId: -1,
       form: {
         nickName: "",
         sex: "",
         email: "",
-        avatar: "",
+        signature: '',
+        deptId: -1,
+        learnDir: '',
+        phoneNumber: '',
+        introduction:''
       },
+      beforeForm: {},
     };
   },
   methods: {
-    ...mapMutations("user", ["updateUserInfo"]),
-    handleAvatarSuccess(res, file) {
-      this.form.avatar = res.data;
-      console.log("res", res);
-      console.log("img", this.form.avatar);
-    },
-    beforeAvatarUpload(file) {
-      const isJPG = file.type === "image/jpeg";
-      const isLt2M = file.size / 1024 / 1024 < 100;
 
-      if (!isJPG) {
-        this.$message.error("上传头像图片只能是 JPG 格式!");
-      }
-      if (!isLt2M) {
-        this.$message.error("上传头像图片大小不能超过 100MB!");
-      }
-      console.log("File", file);
-      return isJPG && isLt2M;
-    },
-
-    async onSubmit() {
-      console.log("submit!", this.form);
-      let res = await reqUpdatauerInfo(this.form);
+    async getuserInfo() {
+      let res = await reqgetInfo()
+      console.log("user", res.user)
       if (res.code == 200) {
-        this.updateUserInfo({
-          nickName: this.form.nickName,
-          avatar: this.form.avatar,
-        });
+        this.userId = res.user.userId
+        let arr = Object.keys(this.form)
+        arr.forEach(item => {
+          if (res.user.hasOwnProperty(item)) {
+            this.form[item] = res.user[item]
+            this.beforeForm[item] = res.user[item]
+          }
+        })
+        // this.beforeForm = this.form 大坑这里不能直接赋值，会导致beforeForm和form一起变
+      }
+    },
+    async onSubmit() {
+
+      let params = {
+        userId: this.userId
+      }
+      let keys = Object.keys(this.form)
+      console.log("this.form",this.form)
+      for (let i = 0; i < keys.length; i++) {
+        let key = keys[i];
+        if (this.form[key] != this.beforeForm[key]) {
+
+          params[key] = this.form[key]
+        }
+      }
+      console.log("params", params)
+      let res = await requpdateuserinfo(params);
+      if (res.code == 200) {
         this.$router.push({ path: "/user" });
       }
     },
@@ -97,37 +120,15 @@ export default {
 .main {
   margin-top: 60px;
   width: 100%;
-  padding: 20px 10%;
-  min-height: 600px;
-  .addAvatar {
-    margin-left: 100px;
-    .avatar-uploader .el-upload {
-      border: 1px dashed #d9d9d9;
-      border-radius: 6px;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-    }
-    .avatar-uploader .el-upload:hover {
-      border-color: #409eff;
-    }
-    .avatar-uploader-icon {
-      font-size: 28px;
-      color: #8c939d;
-      width: 100px;
-      height: 100px;
-      line-height: 100px;
-      text-align: center;
-    }
-    .avatar {
-      width: 100px;
-      height: 100px;
-      display: block;
-      border-radius: 50%;
-    }
-  }
+  padding-top: 100px;
+  min-height: 800px;
+  background-color: rgb(239, 239, 239);
+  display: flex;
+  justify-content: center;
+
   .addForm {
-    width: 75%;
+    width: 600px;
+
   }
 }
 </style>

@@ -8,6 +8,11 @@ export default [
         component: () => import("@/views/registerPage")
     },
     {
+        path: '/amap',
+        component: () => import("@/views/amap")
+    },
+
+    {
         path: '/contestPage',
         component: () => import("@/views/contestPage"),
         children: [
@@ -28,20 +33,11 @@ export default [
     {
         path: '/talkPage',
         component: () => import('@/views/talkPage'),
-        children: [
-            {
-                path: '',
-                redirect: 'mainArea'
-            },
-            {
-                path: 'mainArea',
-                component: () => import('@/views/talkPage/mainArea')
-            },
-            {
-                path: 'specificitem/:id',
-                component: () => import('@/views/talkPage/specificItem')
-            }
-        ]
+       
+    },
+    {
+        path: '/talkspecificitem/:id',
+        component: () => import('@/views/talkPage/specificItem')
     },
     {
         path: '/personSet',
@@ -60,8 +56,8 @@ export default [
         component: () => import("@/views/HomePage")
     },
     {
-        path: '/group',
-        component: () => import('@/views/groupPage')
+        path: '/file',
+        component: () => import('@/views/filePage')
     },
     {
         path: '/intor',
@@ -86,14 +82,14 @@ export default [
             {
                 path: 'sysMes',
                 component: () => import("@/views/myMessage/sysMes")
-            }, 
-            {
-                path:'myMes',
-                component:() => import("@/views/myMessage/myMes")
             },
             {
-                path:'myReply',
-                component:() => import("@/views/myMessage/myReply")
+                path: 'myMes',
+                component: () => import("@/views/myMessage/myMes")
+            },
+            {
+                path: 'myReply',
+                component: () => import("@/views/myMessage/myReply")
             }
         ]
     }
