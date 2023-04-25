@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" ref="vantaRef">
     <div class="card">
       <h3>创新实验室</h3>
       <el-form label-position="top" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
@@ -23,12 +23,31 @@
     </div>
   </div>
 </template>
-
+<script src="p5.min.js"></script>
 <script>
 import { reqLogin, reqgetInfo } from "@/api";
 import { mapMutations } from "vuex";
+import * as THREE from 'three'
+import NET from 'vanta/src/vanta.net'
+
 export default {
   name: "Login",
+  mounted() {
+    this.vantaEffect = NET({
+      el: this.$refs.vantaRef,
+      THREE: THREE,
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: false,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      scale: 1.00,
+      scaleMobile: 1.00,
+      backgroundColor: 0xEFEFEF,
+      color: 0x000000,
+      maxDistance: 10.00,
+    })
+  },
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -84,7 +103,6 @@ export default {
         if (valid) {
           this.login(this.ruleForm);
         } else {
-          console.log("error submit!!");
           return false;
         }
       });

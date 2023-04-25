@@ -18,13 +18,10 @@ export const reqwrite = (params) => request({ url: '/article/writeArticle', meth
 export const reqgetArticleById = (params) => request({ url: `/article/getArticleListById`, method: 'get', params })
 export const reqdeleteArticle = (id) => request({ url: `/article/deleteArticle/${id}`, method: 'delete' })
 export const reqinitArticle = () => request({ url: "/article/initArticle", method: 'get' })//检查是否有草稿
-export const reqgetArticleListByTitle = (params) => request({url:'/article/getArticleListByTitle',method:'get',params})//根据标题搜索
+export const reqgetArticleListByTitle = (params) => request({ url: '/article/getArticleListByTitle', method: 'get', params })//根据标题搜索
 // 用户接口
 export const reqgetInfo = () => request({ url: '/getInfo', method: 'get' })//获取用户信息
 export const reqregister = (params) => request({ url: '/register', method: 'post', data: params })//注册
-export const requpdateavatar = (params) => request({ url: '/update/avatar', method: 'post', data: params })//更新用户头像
-export const requpdateuserinfo = (params) => request({ url: '/update/userInfo', method: 'post', data: params })//更新用户信息
-
 
 
 //评论接口
@@ -35,3 +32,10 @@ export const reqaddComment = (params) => request({ url: '/comment/addComment', m
 //打卡签到
 export const reqsign = (userId) => request({ url: `/common/sign`, method: 'get' })//签到
 export const reqsignInfo = (userId) => request({ url: `/common/signInfo`, method: 'get' })//签到
+
+//更新信息
+export const requpdateavatar = (params) => request({ url: '/update/avatar', method: 'post', data: params })//上传头像
+export const requpdatecustomize = (file,filePath) => request({ url: `/update/customize/?filePath=${filePath}`, method: 'post', data: file })//上传自定义文件
+export const requpdateuserinfo = (params) => request({ url: '/update/userInfo', method: 'post', data: params })//更新用户信息
+
+

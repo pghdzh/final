@@ -6,7 +6,7 @@
       </div>
       <div class="title">{{ topTitle }}</div>
     </div>
-    <el-dialog title="帖子详情" :visible.sync="dialogFormVisible" :fullscreen=true>
+    <el-dialog title="帖子详情" :visible.sync="dialogFormVisible" :show-close="false" :fullscreen=true>
       <el-form :model="form">
         <el-form-item label="标题" :label-width="formLabelWidth">
           <el-input v-model="form.title" autocomplete="off"></el-input>
@@ -30,7 +30,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button @click="talkTem">取 消</el-button>
         <el-button type="primary" @click="talkAdd">确 定</el-button>
       </div>
     </el-dialog>
@@ -78,9 +78,10 @@
               }}</el-button></span>
           </div>
 
-          <div class="sendNew">
-            <el-button type="danger" style="margin-top: 20px" @click="sendArticle">发帖子</el-button>
-          </div>
+
+        </div>
+        <div class="sendNew">
+          <el-button type="primary" style="margin-top: 20px" @click="sendArticle">发帖子</el-button>
         </div>
 
       </div>
@@ -91,7 +92,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { reqgetCategoryList, reqarticleList, reqhotArticleList, reqwrite, requpdateavatar, reqinitArticle, reqgetArticleListByTitle } from "@/api";
+import { reqgetCategoryList, reqarticleList, reqhotArticleList, reqwrite, requpdatecustomize, reqinitArticle, reqgetArticleListByTitle } from "@/api";
 export default {
   computed: {
     ...mapGetters("user", ["userImg", "userName"]),
@@ -110,10 +111,12 @@ export default {
       pageSize: 10,
       categoryId: -1,
       form: {
+        articleId: null,
         categoryId: null,
         content: "",
         isComment: '',
         title: "",
+        status: '1'
       },
       totalSize: -1,
       ArticleList: [],
@@ -158,9 +161,23 @@ export default {
       }
     },
     async sendArticle() {
+      if (!this.userName) {
+        this.$message({
+          showClose: true,
+          message: '请先登陆'
+        });
+        return
+      }
       this.dialogFormVisible = true
       let res = await reqinitArticle()
-      // console.log("res12312", res)
+      console.log("res12312", res)
+      this.form.articleId = res.data.articleId
+      this.form.categoryId = res.data.categoryId
+      if (res.data.content) {
+        this.form.content = res.data.content
+      }
+      this.form.isComment = res.data.isComment
+      this.form.title = res.data.title
     },
     async getInfo() {
       let res2 = await reqhotArticleList();
@@ -229,14 +246,25 @@ export default {
     goHome() {
       this.$router.push({ path: "/home" });
     },
-    async talkAdd() {
-      if (!this.userName) {
+    async talkTem() {
+      let res = await reqwrite(this.form)
+      if (res.code == 200) {
         this.$message({
           showClose: true,
-          message: '请先登陆'
+          message: '草稿保存成功',
+          type: 'success'
         });
-        return
+
+      } else {
+        this.$message({
+          showClose: true,
+          message: '草稿未保存',
+        });
       }
+      this.dialogFormVisible = false
+    },
+    async talkAdd() {
+
       let keys = Object.keys(this.form)
       for (let i = 0; i < keys.length; i++) {
         if (!this.form[keys[i]]) {
@@ -247,7 +275,7 @@ export default {
           retrun;
         }
       }
-
+      this.form.status = '0'
       // console.log("this.form", this.form)
       let res = await reqwrite(this.form)
       if (res.code == 200) {
@@ -269,8 +297,8 @@ export default {
       // 第一步.将图片上传到服务器.
       let imgData = new FormData();
       imgData.append('file', file);
-      let res = await requpdateavatar(imgData)
-      // console.log("Res", res)
+      let res = await requpdatecustomize(imgData, 'article')
+      console.log("Res", res)
       if (res.code == 200) {
         this.$refs.mdedit.$img2Url(pos, res.data);
       }
@@ -337,7 +365,6 @@ export default {
         height: 143px;
         display: flex;
         padding: 20px 0;
-
         align-items: center;
         border-bottom: 1px solid #cfcfcf;
 
@@ -360,6 +387,7 @@ export default {
           height: 102px;
 
           .title {
+
             cursor: pointer;
             font-size: 18px;
             height: 30px;
@@ -414,47 +442,52 @@ export default {
       width: 20%;
       height: 300px;
 
-    }
+      .talkKind {
+        min-height: 160px;
+        background-color: white;
+        border-radius: 2px;
+        box-shadow: 0 1px 2px gainsboro;
+        padding: 10px 20px;
+        margin-top: 20px;
 
-    .talkKind {
-      min-height: 200px;
-      background-color: white;
-      border-radius: 2px;
-      box-shadow: 0 1px 2px gainsboro;
-      padding: 10px;
-      margin-top: 20px;
+        .kinds {
+          margin-top: 10px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
 
-      .kinds {
-        margin-top: 10px;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
+          span {
+            width: 40%;
+            margin-top: 5px;
 
-        span {
-          width: 40%;
-          margin-top: 5px;
-
-          .el-button {
-            width: 100%;
+            .el-button {
+              width: 100%;
+            }
           }
         }
       }
 
-      .sendNew {
-        display: flex;
-        justify-content: center;
+      .search {
+
+        background-color: #fff;
+        padding: 20px 5px;
+        border-radius: 2px;
+        box-shadow: 0 1px 2px gainsboro;
+
+
+        h2 {
+          margin-bottom: 20px;
+
+        }
       }
-    }
 
-    .search {
+      .sendNew {
+        width: 100%;
 
-      background-color: #fff;
-      padding: 20px 5px;
-      border-radius: 2px;
-      box-shadow: 0 1px 2px gainsboro;
-
-      h2 {
-        margin-bottom: 20px;
+        .el-button {
+          width: 100%;
+          text-align: center;
+        }
       }
     }
   }
