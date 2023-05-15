@@ -5,9 +5,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: 'http://localhost:3000/api', // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  baseURL: 'http://124.223.222.65:7171', 
+  timeout: 5000 
 })
 
 // request interceptor

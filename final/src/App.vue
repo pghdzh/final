@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="main">
 
     <topNav class="topNav" v-show="
       $route.fullPath.indexOf('/talkPage') == -1 &&
@@ -15,15 +15,15 @@
 
 <script>
 
-import ScaleBox from "vue2-scale-box";
+// import ScaleBox from "vue2-scale-box";
 
-import devPixelRatio from "@/utils/devicePixelRatio.js";
+// import devPixelRatio from "@/utils/devicePixelRatio.js";
 
 export default {
   name: "App",
-  components: { ScaleBox },
+  // components: { ScaleBox },
   created() {
-    new devPixelRatio().init(); // 初始化页面比例
+    // new devPixelRatio().init(); // 初始化页面比例
   },
 
 };
@@ -75,6 +75,31 @@ L2Dwidget.init(config)
 </script>
 
 <style scoped lang='less'>
+/* 设置响应式 */
+@media (max-width: 1200px) {
+    .main {
+        transform: scale(0.7);
+    }
+}
+
+@media (max-width: 1000px) {
+    .main {
+        transform: scale(0.6);
+    }
+}
+
+@media (max-width: 800px) {
+    .main {
+        transform: scale(0.5);
+    }
+}
+
+@media (max-width: 600px) {
+    .main {
+        transform: scale(0.4);
+    }
+}
+
 .topNav {
   position: fixed;
   top: 0;

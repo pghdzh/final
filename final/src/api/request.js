@@ -5,7 +5,7 @@ import store from '@/store'
 // create an axios instance
 
 const service = axios.create({
-  baseURL: 'http://1.14.123.114:7070', // url = base url + request url
+  baseURL: 'http://124.223.222.65:7070', // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
   timeout: 5000 // request timeout
 })

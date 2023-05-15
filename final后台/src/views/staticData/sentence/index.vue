@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { reqaddSen, reqgetSentence, reqdeteSentence } from "@/api";
+// import { reqaddSen, reqgetSentence, reqdeteSentence } from "@/api";
 export default {
   name: "User",
   mounted() {

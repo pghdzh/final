@@ -1,7 +1,7 @@
 <template>
   <div class="main">
-    <el-button type="primary" @click="addComm">添加用户</el-button>
-    <el-form :inline="true" :model="formInline" class="demo-form-inline">
+    <!-- <el-button type="primary" @click="addComm">添加用户</el-button> -->
+    <!-- <el-form :inline="true" :model="formInline" class="demo-form-inline">
       <el-form-item label="用户姓名">
         <el-input v-model="formInline.userName" placeholder="请输入姓名"></el-input>
       </el-form-item>
@@ -14,7 +14,7 @@
       <el-form-item>
         <el-button type="primary" @click="search">搜索</el-button>
       </el-form-item>
-    </el-form>
+    </el-form> -->
     <el-dialog title="用户信息" :visible.sync="dialogVisible" width="50%" :before-close="handleClose">
       <span>
         <el-form label-width="80px" :model="add">
@@ -51,17 +51,17 @@
         <template slot-scope="props">
           <el-form label-position="left"  class="demo-table-expand">
             <el-form-item label="签名">
-              <!-- <span>{{ props.row.name }}</span> -->
-              <span>签名</span>
+              <span>{{ props.row.remark }}</span>
+             
             </el-form-item>
             <el-form-item label="学习方向">
-             <span>前端</span>
+             <span>{{props.row.learnDir}}</span>
             </el-form-item>
             <el-form-item label="联系方式">
-              <span>12345678</span>
+              <span>{{ props.row.phoneNumber }}</span>
             </el-form-item>
             <el-form-item label="个人介绍">
-              <span>个人介绍</span>
+              <span>{{ props.row.introduction }}</span>
             </el-form-item>
            
           </el-form>
@@ -75,19 +75,23 @@
       </el-table-column>
       <el-table-column label="所属小组"> 小组1</el-table-column>
       <el-table-column label="用户姓名" prop="nickName"> </el-table-column>
-      <el-table-column label="用户账号" prop="userAccount"> </el-table-column>
-      <el-table-column label="用户密码" prop="userPass"> </el-table-column>
+      <el-table-column label="创建时间" prop="createTime"> </el-table-column>
+      <el-table-column label="邮箱" prop="email"> </el-table-column>
       <el-table-column prop="prop" label="操作" width="width">
         <template slot-scope="{ row }">
           <el-button type="danger" icon="el-icon-delete" size="mini" @click="openDel(row)"></el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-pagination background layout="prev, pager, next" :total="totalSize" :current-page.sync="pageNum"
+        :page-size="pageSize" @current-change="currentchange" @prev-click="currentchange" @next-click="currentchange"
+        v-show="pageSize <= totalSize">
+      </el-pagination>
   </div>
 </template>
 
 <script>
-import { reqaddUser, reqgetUser, reqdeteuser } from "@/api";
+import { reqgetAlluser, reqdeleteuser } from "@/api";
 export default {
   name: "User",
   mounted() {
@@ -96,6 +100,9 @@ export default {
   data() {
     return {
       headers: { enctype: "multipart/form-data" },
+      pageSize:10,
+      pageNum:1,
+      totalSize:-1,
       userList: [],
       funKind: 0,
       dialogVisible: false,
@@ -209,7 +216,7 @@ export default {
       })
         .then(() => {
           console.log("行信息", row);
-          reqdeteuser(row.userId)
+          reqdeleteuser({userId:row.userId})
             .then(() => {
               this.getInfo();
               this.$message({
@@ -232,11 +239,20 @@ export default {
         });
     },
     async getInfo() {
-      let result = await reqgetUser();
-      if (result.code == 200) {
-        this.userList = result.data;
-        console.log(this.userList);
+      let params = {
+        pageNum:this.pageNum,
+        pageSize:this.pageSize
       }
+      let result = await reqgetAlluser(params);
+      if (result.code == 200) {
+        this.userList = result.data.row;
+        this.totalSize = result.data.totalSize
+        console.log(result);
+      }
+    },
+    currentchange(pageNum) {
+      this.pageNum = pageNum
+      this.getInfo()
     },
   },
 };

@@ -25,7 +25,7 @@ export default [
                 component: () => import("@/views/contestPage/mainArea")
             },
             {
-                path: 'contestItem',
+                path: 'contestItem:id',
                 component: () => import("@/views/contestPage/contestItem")
             }
         ]
@@ -49,7 +49,7 @@ export default [
     },
     {
         path: '/login',
-        component: () => import('@/views/Login')
+        component: () => import('@/views/NewLogin')
     },
     {
         path: '/home',

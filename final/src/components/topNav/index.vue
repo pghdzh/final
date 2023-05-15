@@ -11,32 +11,12 @@
         <div @click="routerFun(4)">学长风采</div>
       </el-col>
       <el-col :span="3">
-        <el-input
-          size="mini"
-          placeholder="请输入内容"
-          prefix-icon="el-icon-search"
-          v-model="input_search"
-        >
+        <el-input size="mini" placeholder="请输入内容" prefix-icon="el-icon-search" v-model="input_search">
         </el-input>
       </el-col>
       <el-col :span="4" class="login" v-show="!userName">
-        <el-button
-          size="mini"
-          :round="true"
-          type="primary"
-          plain
-          @click.native="routerFun(5)"
-          >登陆</el-button
-        >
-        <el-button
-          size="mini"
-          :round="true"
-          type="primary"
-          plain
-          @click.native="routerFun(6)"
-          >注册</el-button
-        ></el-col
-      >
+        <el-button size="mini" :round="true" type="primary" plain @click.native="routerFun(5)">登陆</el-button>
+      </el-col>
       <el-col :span="2" class="user" v-show="userName">
         <avatarArea />
       </el-col>
@@ -98,28 +78,34 @@ export default {
   border-bottom: 1px solid #dcdfe6;
   background-color: #fff;
   width: 100%;
+
   .top-nav {
     display: flex;
     justify-content: space-around;
     align-items: center;
     flex-wrap: nowrap;
+
     .title {
       cursor: pointer;
       font-size: 24px;
       height: 60px;
       line-height: 60px;
     }
+
     .nav {
       font-size: 15px;
       display: flex;
       justify-content: space-between;
+
       div {
         cursor: pointer;
       }
+
       div:hover {
         color: #409eff;
       }
     }
+
     .login {
       height: 60px;
       text-align: center;

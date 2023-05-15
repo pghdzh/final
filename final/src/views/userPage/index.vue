@@ -119,13 +119,13 @@
         <h1> 我的招募</h1>
         <div v-if="mycontest.length">
           <el-table :data="mycontest" style="width: 100%" max-height="300">
-            <el-table-column prop="date" label="截止日期" width="200">
+            <el-table-column prop="expirationDate" label="截止日期" width="200">
             </el-table-column>
-            <el-table-column prop="title" label="比赛名称" width="180">
+            <el-table-column prop="name" label="比赛名称" width="180">
             </el-table-column>
-            <el-table-column prop="tag" label="技术标签" width="100">
+            <el-table-column prop="label" label="技术标签" width="100">
               <template slot-scope="scope">
-                <el-tag :type="tagType[Math.floor(Math.random() * 5)]" disable-transitions>{{ scope.row.tag }}</el-tag>
+                <el-tag :type="tagType[Math.floor(Math.random() * 5)]" disable-transitions>{{ scope.row.label }}</el-tag>
               </template>
             </el-table-column>
             <el-table-column label="操作" width="150" align="center">
@@ -150,13 +150,14 @@
 
 <script>
 import { mapGetters, mapMutations } from "vuex";
-import { reqgetInfo, requpdateuserinfo, reqsignInfo, reqgetArticleById, reqdeleteArticle } from "@/api";
+import { reqgetInfo, requpdateuserinfo, reqsignInfo, reqgetArticleById, reqdeleteArticle, reqgetRecruitListByUserId, reqdeleteRecruit } from "@/api";
 import { getToken } from "@/utils/token"
 export default {
   name: "userPage",
   mounted() {
     this.getuserInfo();
-    this.getArticle()
+    this.getArticle();
+    this.getcontest();
   },
   data() {
     return {
@@ -271,6 +272,16 @@ export default {
             });
           }
         }
+        if (index == 1) {
+          let resDele = await reqdeleteRecruit({recruitId:row.recruitId})
+          if (resDele.code == 200) {
+            this.getcontest()
+            this.$message({
+              type: 'success',
+              message: '删除成功!'
+            });
+          }
+        }
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -340,12 +351,22 @@ export default {
       }
     },
     async getArticle() {
-      let res = await reqgetArticleById({ userId: this.userId, pageNum: 1, pageSize: 5 })
-      
+      let res = await reqgetArticleById({ userId: this.userId, pageNum: 1, pageSize: 100 })
+
       if (res.code == 200) {
         this.mytalk = res.data.row
       }
-    }
+    },
+    async getcontest() {
+      let res = await reqgetRecruitListByUserId({ userId: this.userId, })
+      if (res.code == 200) {
+        console.log("REs", res)
+        this.mycontest = res.data
+        for (let i = 0; i < this.mycontest.length; i++) {
+          this.mycontest[i].expirationDate = this.mycontest[i].expirationDate.slice(0, 10)
+        }
+      }
+    },
   },
 };
 </script>
@@ -444,20 +465,19 @@ export default {
           position: absolute;
           left: 0;
           top: 0;
-          width: 60px;
-          height: 60px;
+          width:100px;
+          height: 100px;
           background-color: rgba(0, 0, 0, .5);
           color: #fff;
           text-align: center;
           border-radius: 50%;
-          line-height: 60px;
+          line-height: 100px;
         }
       }
 
       .avatar:hover {
         .changeAvatar {
-          display: block;
-          ;
+          display: block;  
         }
       }
 

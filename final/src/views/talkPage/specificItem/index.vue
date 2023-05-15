@@ -34,14 +34,14 @@
         </div>
         <div>
           <span class="board-left">楼主</span>
-          <span style="color: #8e44ad; cursor: pointer">{{ article.user.nickName }}</span>
+          <span style="color: #8e44ad; cursor: pointer">{{ nickName}}</span>
         </div>
         <div>
           <span class="board-left">发帖时间</span>
           <span style="color: grey">{{ article.createTime }}</span>
         </div>
       </div>
-      <div class="reply-box-container">
+      <div class="reply-box-container" v-if="userImg">
         <div class="reply-box">
           <div class="box-normal">
             <div class="reply-box-avatar">
@@ -61,6 +61,7 @@
 </template>
 
 <script>
+ import _ from 'lodash';
 import talkBox from "./talkBox";
 import { mapGetters } from "vuex";
 import { reqarticle, reqcommentList, reqaddComment } from "@/api";
@@ -81,7 +82,8 @@ export default {
       talklist: [],
       article: {},
       commentTotal: -1,
-      AddCommentContent: ''
+      AddCommentContent: '',
+      nickName:"",
     };
 
   },
@@ -91,7 +93,8 @@ export default {
       let res = await reqarticle(this.$route.params.id);
       if (res.code == 200) {
         console.log("data", res.data);
-        this.article = res.data
+        this.article = _.cloneDeep(res.data);
+        this.nickName = res.data.user.nickName
       }
       this.getcomment()
     },

@@ -44,12 +44,12 @@
             <div class="title" @click="goItem(i.articleId)">
               {{ i.title }}
             </div>
-            <div class="content">
+            <!-- <div class="content">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolore est, pariatur eligendi molestias qui earum
               odit cupiditate ipsum quidem? Ratione Lorem ipsum, dolor sit amet consectetur adipisicing elit. Laboriosam
               qui dolorum quam error saepe sequi dolore soluta veritatis veniam! Autem maxime iure tempora saepe ab
               architecto, vel libero eum quae. accusamus at, nulla repellat saepe ut quas itaque eveniet deleniti.
-            </div>
+            </div> -->
             <div class="otherMes">
               <span> <i class="el-icon-star-off">36</i></span>
               <span>作者:{{ i.user.nickName }}</span>
@@ -92,7 +92,7 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { reqgetCategoryList, reqarticleList, reqhotArticleList, reqwrite, requpdatecustomize, reqinitArticle, reqgetArticleListByTitle } from "@/api";
+import { reqgetCategoryList, reqarticleList, reqhotArticleList, reqwrite, requpdatecustomize, reqinitArticle, reqgetArticleListByTitle, requpdateViewCount } from "@/api";
 export default {
   computed: {
     ...mapGetters("user", ["userImg", "userName"]),
@@ -112,7 +112,7 @@ export default {
       categoryId: -1,
       form: {
         articleId: null,
-        categoryId: null,
+        categoryId: -1,
         content: "",
         isComment: '',
         title: "",
@@ -132,13 +132,7 @@ export default {
         });
         return
       }
-      if (!this.userName) {
-        this.$message({
-          showClose: true,
-          message: '请先登陆'
-        });
-        return
-      }
+
       this.topTitle = this.searchInput + ""
       this.pageNum = 1;
       this.pageSize = 10;
@@ -188,6 +182,7 @@ export default {
       let res = await reqgetCategoryList();
       if (res.code == 200) {
         this.kindsList = res.data;
+        this.form.categoryId = this.kindsList[0]
         console.log("kind", res.data);
       }
 
@@ -239,22 +234,33 @@ export default {
       this.pageSize = pageSize
       this.getarticleList()
     },
-    goItem(id) {
+    async goItem(id) {
+      let res = await requpdateViewCount(id)
+      if (res.code == 200) {
+        this.$router.push({ path: `/talkspecificitem/${id}` });
+      }
 
-      this.$router.push({ path: `/talkspecificitem/${id}` });
     },
     goHome() {
       this.$router.push({ path: "/home" });
     },
     async talkTem() {
+      // let params = []
+      // let keys = Object.keys(this.form)
+      // for (let i = 0; i < keys.length; i++) {
+      //   if (this.form[keys[i]]) {
+      //     params.push(p)
+      //   }
+      // }
+      console.log("param", this.form)
       let res = await reqwrite(this.form)
+      console.log("res", res)
       if (res.code == 200) {
         this.$message({
           showClose: true,
           message: '草稿保存成功',
           type: 'success'
         });
-
       } else {
         this.$message({
           showClose: true,
@@ -385,6 +391,7 @@ export default {
           flex-direction: column;
 
           height: 102px;
+          width: 100%;
 
           .title {
 

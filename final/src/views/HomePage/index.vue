@@ -25,7 +25,7 @@
                 <span v-show="IsSign">恭喜你,你已经连续签到{{ SignNums }}天</span>
               </div>
               <div class="tips" v-if="sentence.length" style="text-align: center; margin-top: 20px">
-                <span>{{ sentence[senNum].content }}</span>
+                <span>{{ sentence[senNum] }}</span>
               </div>
 
 
@@ -59,7 +59,7 @@
           <el-button type="primary" plain @click="dailyDialogVisible = true">提交每日情况</el-button>
         </div>
       </div>
-      <el-dialog title="日志" :visible.sync="dailyDialogVisible" width="30%" >
+      <el-dialog title="日志" :visible.sync="dailyDialogVisible" width="30%">
         <span>
           每日情况记录：
           <el-input type="textarea" :rows="2" placeholder="请输入内容"></el-input>
@@ -87,8 +87,7 @@
               <div v-else class="defaultAvatar">{{ i.user.nickName[0] }}</div>
             </div>
             <div class="right">
-              <div style="color: #10a0ea; cursor: pointer"
-                @click="$router.push({ path: `/talkspecificitem/${i.articleId}` })">{{ i.title }}</div>
+              <div style="color: #10a0ea; cursor: pointer" @click="gotalkDetail(i.articleId)">{{ i.title }}</div>
               <div style="font-weight: bold">{{ i.user.nickName }}</div>
               <div style="color: grey; font-size: 6px">{{ i.createTime }}</div>
             </div>
@@ -103,7 +102,7 @@
           </div>
         </div>
       </div>
-      <div class="contest">
+      <div class="contest" v-loading="anyLoading">
         <div class="contest-top">
           <span class="left">
             <cat class="cat" />
@@ -112,20 +111,20 @@
           <span class="right" @click="goContest">前往招募区>></span>
         </div>
         <div class="items">
-          <div class="item" v-for="i in 4" :key="i">
+          <div class="item" v-for="i, index in contestList" :key="index">
             <div class="title">
-              <span>比赛名字</span> <span>招募人：{{ userName }}</span>
+              <span>{{ i.name }}</span> <span>招募人：{{ i.user.nickName }}</span>
             </div>
             <div class="detail">
               <span class="area">
                 <span>技术标签 </span>
-                <span>vue</span>
+                <span>{{ i.label }}</span>
               </span>
               <span class="area"><span>需求人数 </span>
-                <span>1人</span>
+                <span>{{ i.peopleNumber }}人</span>
               </span>
               <span class="area"><span style="color: grey">截止时间 </span>
-                <span style="color: grey">2022-9-23</span>
+                <span style="color: grey">{{ i.expirationDate.slice(0, 10) }}</span>
               </span>
             </div>
           </div>
@@ -139,7 +138,7 @@
 <script>
 import dayjs from "dayjs";
 import { mapGetters } from "vuex";
-import { reqgetSentence, reqsign, reqsignInfo, reqhotArticleList } from "@/api";
+import { reqsign, reqsignInfo, reqhotArticleList, reqgetRecruitList, requpdateViewCount } from "@/api";
 import cat from "@/components/cat";
 import * as THREE from 'three'
 import BIRDS from 'vanta/src/vanta.birds'
@@ -153,9 +152,10 @@ export default {
       separation: 100.00,
       quantity: 4.00
     })
+    this.senNum = Math.round(Math.random() * (this.sentence.length - 1));
     this.getDate();
-    this.getSentence();
-    // this.getMap();
+    // this.getSentence();
+    this.getMap();
     this.getreqInfoLogin()
     this.getreqInfoAny()
   },
@@ -174,6 +174,7 @@ export default {
         require("./img/swiper5.jpg"),
       ],
       hotTalkList: [],
+      contestList: [],
       IsSign: false,
       SignNums: 0,
       date: {
@@ -182,7 +183,17 @@ export default {
         weekday: "",
         IsBig: "",
       },
-      sentence: [],
+      sentence: [
+        '可以逃跑，可以哭泣，但不可以放弃。--鬼灭',
+        '前进吧，一步一个脚印也没有关系。--鬼灭',
+        '什么都不能舍弃的人，就无法改变任何东西。--进巨',
+        'Life is not always fair. 生活并不总是公平。--加速世界',
+        '没有力量的理想是戏言，没有理想的力量是空虚。--利姆露',
+        '只要不失去你的崇高，整个世界都会为你敞开。--七天神像',
+        '有些事情，不去动手是不知道的 ----有纪',
+        '变得温柔和强大，就算哪天突然孤身一人，也能平静地活下去，不至于崩溃。 --言叶之庭',
+        '人毕竟无法与别人共享速度与节奏，这一切只属于自己.--强风吹拂',
+      ],
       senNum: 0,
     };
   },
@@ -190,6 +201,13 @@ export default {
     ...mapGetters("user", ["userName", "userImg", 'userId']),
   },
   methods: {
+    async gotalkDetail(articleId) {
+      let res = await requpdateViewCount(articleId)
+      if (res.code == 200) {
+        this.$router.push({ path: `/talkspecificitem/${articleId}` })
+      }
+
+    },
     goTalkArea() {
       this.$router.push({ path: "/talkPage" });
     },
@@ -198,14 +216,20 @@ export default {
     },
 
     async getreqInfoAny() {
+      let params = {
+        pageNum: 1,
+        pageSize: 4
+      }
       this.anyLoading = true
       try {
         let res = await Promise.all([
-          reqhotArticleList()
+          reqhotArticleList(),
+          reqgetRecruitList(params)
         ])
         if (res) {
-          // console.log("res",res)
+          console.log("res", res)
           this.hotTalkList = res[0].data.slice(0, 6)
+          this.contestList = res[1].data.row
           this.anyLoading = false
           // console.log("hot", this.hotTalkList)
         }
@@ -247,13 +271,13 @@ export default {
       this.getreqInfoLogin()
     },
 
-    async getSentence() {
-      let res = await reqgetSentence();
-      if (res.code == 200) {
-        this.sentence = res.data;
-        this.senNum = Math.round(Math.random() * (res.data.length - 1));
-      }
-    },
+    // async getSentence() {
+    //   let res = await reqgetSentence();
+    //   if (res.code == 200) {
+    //     this.sentence = res.data;
+    //     this.senNum = Math.round(Math.random() * (res.data.length - 1));
+    //   }
+    // },
 
     getDate() {
       let month = [
@@ -398,6 +422,7 @@ export default {
     margin-left: 10%;
     width: 60%;
     background-color: #fff;
+    min-height: 200px;
 
     .contest-top {
       padding: 0;

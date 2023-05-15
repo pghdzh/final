@@ -4,14 +4,15 @@
       <h3>创新实验室</h3>
       <el-form label-position="top" :model="ruleForm" status-icon :rules="rules" ref="ruleForm" class="demo-ruleForm">
         <el-form-item label="账号" prop="userName">
-          <el-input type="text" v-model="ruleForm.userName" autocomplete="off"></el-input>
+          <el-input type="text" v-model="ruleForm.userName" @keyup.enter.native="focusNext(1)" autofocus></el-input>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input type="password" v-model="ruleForm.password" autocomplete="off"></el-input>
+          <el-input type="password" v-model="ruleForm.password" ref="input1"
+          @keydown.enter.native="submitForm('ruleForm')"></el-input>
         </el-form-item>
 
         <el-form-item style="text-align: center">
-          <el-button type="primary" @click="submitForm('ruleForm')">登陆</el-button>
+          <el-button type="primary" ref="submit" @click="submitForm('ruleForm')">登陆</el-button>
           <el-button @click="resetForm('ruleForm')">重置</el-button>
         </el-form-item>
         <el-form-item style="text-align: center">
@@ -23,30 +24,30 @@
     </div>
   </div>
 </template>
-<script src="p5.min.js"></script>
+
 <script>
 import { reqLogin, reqgetInfo } from "@/api";
 import { mapMutations } from "vuex";
-import * as THREE from 'three'
-import NET from 'vanta/src/vanta.net'
+// import * as THREE from 'three'
+// import NET from 'vanta/src/vanta.net'
 
 export default {
   name: "Login",
   mounted() {
-    this.vantaEffect = NET({
-      el: this.$refs.vantaRef,
-      THREE: THREE,
-      mouseControls: true,
-      touchControls: true,
-      gyroControls: false,
-      minHeight: 200.00,
-      minWidth: 200.00,
-      scale: 1.00,
-      scaleMobile: 1.00,
-      backgroundColor: 0xEFEFEF,
-      color: 0x000000,
-      maxDistance: 10.00,
-    })
+    // this.vantaEffect = NET({
+    //   el: this.$refs.vantaRef,
+    //   THREE: THREE,
+    //   mouseControls: true,
+    //   touchControls: true,
+    //   gyroControls: false,
+    //   minHeight: 200.00,
+    //   minWidth: 200.00,
+    //   scale: 1.00,
+    //   scaleMobile: 1.00,
+    //   backgroundColor: 0xEFEFEF,
+    //   color: 0x000000,
+    //   maxDistance: 10.00,
+    // })
   },
   data() {
     var validatePass = (rule, value, callback) => {
@@ -109,6 +110,16 @@ export default {
     },
     resetForm(formName) {
       this.$refs[formName].resetFields();
+    },
+    focusNext(index) {
+      console.log("123")
+      let nextElement = null;
+      if (index == 1) {
+        nextElement = this.$refs.input1;
+      }
+      if (nextElement) {
+        nextElement.focus();
+      }
     },
   },
 };
